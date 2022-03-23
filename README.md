@@ -1,5 +1,5 @@
 # AppliedStatisticsProject2022
-This is the repository for the Applied Statistics Project of 2022. 
+This is the repository for the Applied Statistics Project of 2022. The goal of this project is to perform a statistical analysis of 4 milion mutation sequences of Sars-Cov-2, provided by the Nextstrain project. All of our analyses will be performed in R.
 
 Team members (in alphabetical order)
 
