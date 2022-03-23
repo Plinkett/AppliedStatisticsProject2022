@@ -16,7 +16,7 @@ sum(covid$missing_data > 5000)
 sum(covid$missing_data > 7000)
 
 # Cancelliamo le righe con missing_data > 900 
-covid <- subset(covid, covid$missing_data <= 900)
+# covid <- subset(covid, covid$missing_data <= 900)
 
 sum(covid$host != "Homo sapiens")
 sum(covid$pango_lineage == "unclassifiable")
