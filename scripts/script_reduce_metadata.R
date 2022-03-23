@@ -51,4 +51,23 @@ region_country_division <- as.data.frame(unique(covid[,c('region','country','div
 # write.csv(data.frame(clades), file = "clades.csv",row.names=FALSE)
 # write.csv(data.frame(region_country_division), file = "region_country_division.csv",row.names=FALSE)
 
+# Playing with aaSequences
+# aasequence <- covid_animals[1,10]
+# aasequence <- as.data.frame(strsplit(aasequence, ","))
 
+# Takes an aaSequence as a one column dataframe
+protein_changes <- function(aasequence) {
+  proteins <- as.data.frame(matrix(nrow=0,ncol=2)) # Vector that holds all the proteins and number of changes
+  for(i in 1:nrow(aasequence)) {
+    tuple <- as.data.frame(strsplit(as.character(aasequence[i,1]), ":"))  
+    if(tuple[1,1] %in% proteins[,1]) {
+      index <- match(tuple[1,1], proteins[,1])
+      proteins[index,2] <- proteins[index,2] + 1 # a change is added
+    }
+    else {
+      proteins <- rbind(proteins, list(tuple[1,1],1))
+    }
+  }
+  colnames(proteins) <- c("protein","numOfVariations")
+  return(proteins)
+}
