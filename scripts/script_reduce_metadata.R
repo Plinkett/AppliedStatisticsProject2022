@@ -73,25 +73,40 @@ protein_changes <- function(aasequence) {
   colnames(proteins) <- c("protein","numOfVariations")
   return(proteins)
 }
-
-# Fetch all unique proteins in a certain dataset (to use with lineages or clades)
-fetch_proteins <- function(covid_df) {
+  
+# Fetch all unique mutations in a certain dataset (to use with lineages or clades)
+fetch_mutations <- function(covid_df) {
   # Assumes aaSubstitutions is the 9th column!
   # According to our conventions in the metadata_animals.csv data set
   # the 10th column refers to aaSubstitutions 
   aasequences <- as.data.frame(covid_df[,9])
-  unique_proteins <- as.data.frame(matrix(nrow=0,ncol=1))
+  unique_mutations <- as.data.frame(matrix(nrow=0,ncol=1))
   for(i in 1:nrow(aasequences)) {
     # Must do an inner loop...
-    aachanges <- as.data.frame(strsplit(as.character(aasequences[i,1]), ",")) 
-    for(j in 1:nrow(aachanges)) {
-      tuple <- as.data.frame(strsplit(as.character(aachanges[j,1]),":"))
-      if(!(tuple[1,1] %in% unique_proteins[,1])) {
-        unique_proteins <- rbind(unique_proteins, list(tuple[1,1]))
+    aamutations <- as.data.frame(strsplit(as.character(aasequences[i,1]), ",")) 
+    for(j in 1:nrow(aamutations)) {
+      #tuple <- as.data.frame(strsplit(as.character(aachanges[j,1]),":"))
+      mutation <- aamutations[j,1]
+      if(!(mutation %in% unique_mutations[,1])) {
+        unique_mutations <- rbind(unique_mutations, list(mutation))
       }
     }
   }
-  return(unique_proteins)
+  return(unique_mutations)
 }
+
+
+# Functions that builds the final matrix to be analyzed
+build_matrix(dfcovid, mutations) {
+  matrixnames <- cbind("lineage", "location", "date", t(mutations))
+  for(i in 1:nrow(dfcovid)) {
+    entry <- dfcovid[i,]
+    
+  }
+}
+
+
+
+
 
 
