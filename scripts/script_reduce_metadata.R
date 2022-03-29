@@ -56,7 +56,7 @@ region_country_division <- as.data.frame(unique(covid[,c('region','country','div
 # aasequence <- as.data.frame(strsplit(aasequence, ","))
 
 b117 <- subset(covid, covid$pango_lineage == "B.1.1.7")
-
+b117 <- subset(b117, (b117$length - b117$missing_data) > 29000)
 # Takes an aaSequence as a one column dataframe
 protein_changes <- function(aasequence) {
   proteins <- as.data.frame(matrix(nrow=0,ncol=2)) # Vector that holds all the proteins and number of changes
@@ -81,23 +81,46 @@ fetch_mutations <- function(covid_df) {
   # the 10th column refers to aaSubstitutions 
   aasequences <- as.data.frame(covid_df[,9])
   unique_mutations <- as.data.frame(matrix(nrow=0,ncol=1))
+  empty <- 0
   for(i in 1:nrow(aasequences)) {
     # Must do an inner loop...
     aamutations <- as.data.frame(strsplit(as.character(aasequences[i,1]), ",")) 
     for(j in 1:nrow(aamutations)) {
       #tuple <- as.data.frame(strsplit(as.character(aachanges[j,1]),":"))
       mutation <- aamutations[j,1]
-      if(!(mutation %in% unique_mutations[,1])) {
-        unique_mutations <- rbind(unique_mutations, list(mutation))
+      if(length(mutation) != 0) {
+        if(!(mutation %in% unique_mutations[,1])) {
+          unique_mutations <- rbind(unique_mutations, list(mutation))
+        }
+      }
+      else {
+        empty <- empty + 1
       }
     }
   }
+  print(empty)
   return(unique_mutations)
 }
 
+# Build mutation frequencies, both in dataframe forms
+# mutations as a single column dataframe
+mutation_frequencies <- function(dfcovid, mutations) {
+  freq <-  as.data.frame(matrix(nrow=1,ncol=nrow(mutations)))
+  freq[1,] <- integer(nrow(mutations))
+  colnames(freq) <- mutations[,1]
+  aasequences <- as.data.frame(dfcovid[,9])
+  for(i in 1:nrow(aasequences)) {
+    aamutations <- as.data.frame(strsplit(as.character(aasequences[i,1]), ","))
+    for(j in 1:nrow(aamutations)) {
+      mutation_i <- match(aamutations[j,1], mutations[,1])
+      freq[1,mutation_i] <- freq[1,mutation_i] + 1      
+    }
+  }
+  return(freq)
+}
 
 # Functions that builds the final matrix to be analyzed
-build_matrix(dfcovid, mutations) {
+build_matrix <- function(dfcovid, mutations) {
   matrixnames <- cbind("lineage", "location", "date", t(mutations))
   for(i in 1:nrow(dfcovid)) {
     entry <- dfcovid[i,]
