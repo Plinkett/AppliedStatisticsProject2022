@@ -57,6 +57,8 @@ region_country_division <- as.data.frame(unique(covid[,c('region','country','div
 
 b117 <- subset(covid, covid$pango_lineage == "B.1.1.7")
 b117 <- subset(b117, (b117$length - b117$missing_data) > 29000)
+
+# THIS FUNCTION IS OBSOLETE
 # Takes an aaSequence as a one column dataframe
 protein_changes <- function(aasequence) {
   proteins <- as.data.frame(matrix(nrow=0,ncol=2)) # Vector that holds all the proteins and number of changes
@@ -74,6 +76,9 @@ protein_changes <- function(aasequence) {
   return(proteins)
 }
   
+# After having the total number of frequencies, fetch the most meaningful mutations
+ratios <- cbind(total_frequencies, total_frequencies[,1] / total_samples)
+good_ratios <- subset(ratios, ratios$V2 <= 9.5e-01 & ratios$V2 >= 5e-02)
 # Fetch all unique mutations in a certain dataset (to use with lineages or clades)
 fetch_mutations <- function(covid_df) {
   # Assumes aaSubstitutions is the 9th column!
@@ -92,9 +97,6 @@ fetch_mutations <- function(covid_df) {
         if(!(mutation %in% unique_mutations[,1])) {
           unique_mutations <- rbind(unique_mutations, list(mutation))
         }
-      }
-      else {
-        empty <- empty + 1
       }
     }
   }
@@ -119,13 +121,54 @@ mutation_frequencies <- function(dfcovid, mutations) {
   return(freq)
 }
 
-# Functions that builds the final matrix to be analyzed
-build_matrix <- function(dfcovid, mutations) {
-  matrixnames <- cbind("lineage", "location", "date", t(mutations))
+# Function that builds the binary matrix of mutations 
+# column names
+# [lineage, country, date, mutation1, mutation2, ..., mutationN]
+# Input:
+#   dfcovid <- dataframe as presented in the original metadata_filtrato.csv dataset 
+#              (minus the "host" column, which is assumed to be "Homo sapiens").
+#   important_mutations <- the set of mutations deemed relevant for our analysis, that is the mutations
+#                          that appear less than 95% and more than 5% of the time.
+build_matrix <- function(dfcovid, important_mutations) {
+  # Initial declaration of the matrix, empty matrix
+  finalmatrix <- as.data.frame(matrix(nrow=0, ncol = (3 + nrow(important_mutations))))
+  # Outer for that scans the dataframe one row at a time
   for(i in 1:nrow(dfcovid)) {
-    entry <- dfcovid[i,]
-    
+    # the "toadd" dataframe is a one row dataframe containing the row to be added to the matrix
+    # we fill it with the lineage, country, date + a number of columns equal to that of the 
+    # relevant mutations
+    toadd <- as.data.frame(matrix(nrow=1, ncol = (3 + nrow(important_mutations))))
+    toadd[1,1] <- dfcovid[i,]$pango_lineage;
+    toadd[1,2] <- dfcovid[i,]$country
+    toadd[1,3] <- dfcovid[i,]$date
+    # We initialize the 4th column up to nrow(important_mutations) with zeroes, remember
+    # that these are binary variables!
+    toadd[1,4:ncol(toadd)] <- t(as.data.frame(integer(nrow(important_mutations))))
+    # The aaSubstitutions column is split by "," and converted into a dataframe to be scanned
+    # for example:
+    #   N:G204R,ORF1a:Q3966R,S:K1191N (one row)
+    #   becomes this:
+    #     - N:G204R
+    #     - ORF1a:Q3966R
+    #     - S:K1191N
+    aamutations <- as.data.frame(strsplit(as.character(dfcovid[i,9]), ","))
+    # Now we scan the mutations
+    for(j in 1:nrow(aamutations)) {
+      # We search for the index of the current mutation in the important_mutations row
+      # If we don't find it then it means that the mutations is not relevant and we don't consider it
+      # this also means that match() will return a NA (absence of a value)
+      mutation_i <- match(aamutations[j,1], important_mutations[,1])
+      if(!is.na(mutation_i)) {
+        # If we find the mutation then we mark it with a 1 (the mutation occurred in this sample)
+        toadd[1, 3 + mutation_i] <- 1
+      }
+    }
+    # We add the "toadd" row to the matrix (merging the two with rbind())
+    finalmatrix <- rbind(finalmatrix, toadd[1,])
   }
+  # We rename the column names
+  colnames(finalmatrix) <- c("lineage", "location", "date", t(important_mutations))
+  return(finalmatrix)
 }
 
 
