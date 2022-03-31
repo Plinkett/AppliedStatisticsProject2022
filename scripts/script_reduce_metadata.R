@@ -1,3 +1,10 @@
+# Aggiunge gli indices
+add_indices <- function(covid) {
+  for(i in 1:nrow(covid)) {
+    covid[i,10] <- i
+  }
+}
+
 covid <- read.csv("metadata_filtrato.tsv", sep="\t")
 any(is.na(covid$missing_data))
 sum(is.na(covid$missing_data))
@@ -60,21 +67,21 @@ b117 <- subset(b117, (b117$length - b117$missing_data) > 29000)
 
 # THIS FUNCTION IS OBSOLETE
 # Takes an aaSequence as a one column dataframe
-protein_changes <- function(aasequence) {
-  proteins <- as.data.frame(matrix(nrow=0,ncol=2)) # Vector that holds all the proteins and number of changes
-  for(i in 1:nrow(aasequence)) {
-    tuple <- as.data.frame(strsplit(as.character(aasequence[i,1]), ":"))  
-    if(tuple[1,1] %in% proteins[,1]) {
-      index <- match(tuple[1,1], proteins[,1])
-      proteins[index,2] <- proteins[index,2] + 1 # a change is added
-    }
-    else {
-      proteins <- rbind(proteins, list(tuple[1,1],1))
-    }
-  }
-  colnames(proteins) <- c("protein","numOfVariations")
-  return(proteins)
-}
+#protein_changes <- function(aasequence) {
+#  proteins <- as.data.frame(matrix(nrow=0,ncol=2)) # Vector that holds all the proteins and number of changes
+#  for(i in 1:nrow(aasequence)) {
+#    tuple <- as.data.frame(strsplit(as.character(aasequence[i,1]), ":"))  
+#    if(tuple[1,1] %in% proteins[,1]) {
+#      index <- match(tuple[1,1], proteins[,1])
+#      proteins[index,2] <- proteins[index,2] + 1 # a change is added
+#    }
+#    else {
+#      proteins <- rbind(proteins, list(tuple[1,1],1))
+#    }
+#  }
+#  colnames(proteins) <- c("protein","numOfVariations")
+#  return(proteins)
+#}
   
 # After having the total number of frequencies, fetch the most meaningful mutations
 ratios <- cbind(total_frequencies, total_frequencies[,1] / total_samples)
@@ -119,6 +126,20 @@ mutation_frequencies <- function(dfcovid, mutations) {
     }
   }
   return(freq)
+}
+
+
+
+#
+split_mutations_by_sequence <- function(dfcovid) {
+  final_df <- as.data.frame(matrix(nrow=0,ncol=2))
+  for(i in 1:nrow(dfcovid)) {
+    mutations <- as.data.frame(strsplit(as.character(dfcovid[i,9]), ","))  
+    for(j in 1:nrow(mutations)) {
+      final_df <- rbind(final_df, c(i,mutations[j,1]))  
+    }
+  }
+  return(final_df)
 }
 
 # Function that builds the binary matrix of mutations 
