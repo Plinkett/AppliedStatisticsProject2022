@@ -136,7 +136,7 @@ split_mutations_by_sequence <- function(dfcovid) {
   for(i in 1:nrow(dfcovid)) {
     mutations <- as.data.frame(strsplit(as.character(dfcovid[i,9]), ","))  
     for(j in 1:nrow(mutations)) {
-      final_df <- rbind(final_df, c(i,mutations[j,1]))  
+      final_df <- rbind(final_df, c(dfcovid[i,10],mutations[j,1]))  
     }
   }
   return(final_df)
