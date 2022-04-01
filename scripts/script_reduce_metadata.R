@@ -130,7 +130,30 @@ mutation_frequencies <- function(dfcovid, mutations) {
 
 
 
-#
+# sapply(1:10, list_mutations) OR
+# sapply(1:10, function(mutations) strsplit((aasequence),","))
+# Second version with sapply
+#list_mutations <- function(aasequence, index) {
+#  tokens <- as.data.frame(strsplit((as.character(aasequence)),","))
+#  return(t(as.data.frame(sapply(tokens[,1], function(token, id) cbind(id, token), id=index))))
+#}
+
+# Second version of split_by_sequence, using sapply
+#split_by_sequence_2_0 <- function(dfcovid) {
+#  matrices <- mapply(list_mutations, dfcovid[,2], dfcovid[,1])
+#}
+
+# First version of the split_mutations_by_sequence
+#split_mutations_by_sequence_2_0 <- function(dfcovid) {
+#  final_df <- as.data.frame(matrix(nrow=0,ncol=2))
+#  for(i in 1:nrow(dfcovid)) {
+#    mutations <- list_mutations(dfcovid[i,2], dfcovid[i,1])
+#    final_df <- rbind(final_df, mutations)
+#  }
+# return(final_df)
+#``}
+
+
 split_mutations_by_sequence <- function(dfcovid) {
   final_df <- as.data.frame(matrix(nrow=0,ncol=2))
   for(i in 1:nrow(dfcovid)) {
