@@ -1,3 +1,20 @@
+# Come creare la matrice binaria
+#dfcovid_b117 <- subset(dfcovid, dfcovid$pango_lineage == "B.1.1.7")
+
+#mutations_b117 <- as.data.frame(matrix(nrow=0,ncol=1))	
+#mutations_b117 <- fetch_mutations(dfcovid_b117, mutations_b117)
+
+#frequencies_b117 <- mutations_frequencies(dfcovid_b117,mutations_b117)
+
+#relevant_mutations <- filter5percent(frequencies_b117, nrow(dfcovid_b117))
+
+#binmatrix_b117 <- build_matrix(dfcovid_b117, relevant_mutations)
+
+# Per salvare i dati 
+# write.csv(data.frame(frequencies_b117), file = "frequencies_b117.csv",row.names=FALSE)
+
+
+
 # Aggiunge gli indices
 add_indices <- function(covid) {
   for(i in 1:nrow(covid)) {
