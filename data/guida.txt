@@ -1,0 +1,4 @@
+1. Fetch mutations
+2. Count them
+3. Filter the ones < 5%
+4. Build binary matrix

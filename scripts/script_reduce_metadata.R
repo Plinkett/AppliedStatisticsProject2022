@@ -87,13 +87,12 @@ b117 <- subset(b117, (b117$length - b117$missing_data) > 29000)
 ratios <- cbind(total_frequencies, total_frequencies[,1] / total_samples)
 good_ratios <- subset(ratios, ratios$V2 <= 9.5e-01 & ratios$V2 >= 5e-02)
 # Fetch all unique mutations in a certain dataset (to use with lineages or clades)
-fetch_mutations <- function(covid_df) {
+fetch_mutations <- function(covid_df, unique_mutations) {
   # Assumes aaSubstitutions is the 9th column!
   # According to our conventions in the metadata_animals.csv data set
   # the 10th column refers to aaSubstitutions 
   aasequences <- as.data.frame(covid_df[,9])
-  unique_mutations <- as.data.frame(matrix(nrow=0,ncol=1))
-  empty <- 0
+  #unique_mutations <- as.data.frame(matrix(nrow=0,ncol=1))
   for(i in 1:nrow(aasequences)) {
     # Must do an inner loop...
     aamutations <- as.data.frame(strsplit(as.character(aasequences[i,1]), ",")) 
@@ -107,7 +106,6 @@ fetch_mutations <- function(covid_df) {
       }
     }
   }
-  print(empty)
   return(unique_mutations)
 }
 
@@ -125,10 +123,16 @@ mutation_frequencies <- function(dfcovid, mutations) {
       freq[1,mutation_i] <- freq[1,mutation_i] + 1      
     }
   }
-  return(freq)
+  return(cbind(mutations,t(freq)))
 }
 
-
+# Function that filters the mutations that appear less than 5% of the time
+filter5percent <- function(frequencies, totalsamples) {
+  frequencies[,3] <- frequencies[,2] / totalsamples
+  frequencies <- subset(frequencies, frequencies[,3] > 0.05)
+  frequencies <- frequencies[,-3]
+  return(as.data.frame(frequencies))
+}
 
 # sapply(1:10, list_mutations) OR
 # sapply(1:10, function(mutations) strsplit((aasequence),","))
@@ -164,6 +168,7 @@ split_mutations_by_sequence <- function(dfcovid) {
   }
   return(final_df)
 }
+
 
 # Function that builds the binary matrix of mutations 
 # column names
@@ -211,7 +216,7 @@ build_matrix <- function(dfcovid, important_mutations) {
     finalmatrix <- rbind(finalmatrix, toadd[1,])
   }
   # We rename the column names
-  colnames(finalmatrix) <- c("lineage", "location", "date", t(important_mutations))
+  colnames(finalmatrix) <- c("lineage", "country", "date", t(important_mutations[,1]))
   return(finalmatrix)
 }
 
