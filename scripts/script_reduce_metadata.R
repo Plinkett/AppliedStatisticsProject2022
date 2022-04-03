@@ -13,7 +13,13 @@
 # Per salvare i dati 
 # write.csv(data.frame(frequencies_b117), file = "frequencies_b117.csv",row.names=FALSE)
 
-
+# binmatrix_b117_0k_100k <- build_matrix(dfcovid_b117[1:100000,], relevant_mutations) 
+# write.csv(data.frame(binmatrix_b1117_0k_100k), file = "binmatrix_b117_0k_100k.csv",row.names=FALSE)
+# binmatrix_b117_100k_200k <- build_matrix(dfcovid_b117[100001:200000],relevant_mutations)
+# binmatrix_b117_0k_200k <- rbind(binmatrix_b117_0k_100k, binmatrix_b117_100k_200k)
+# 
+#
+#
 
 # Aggiunge gli indices
 add_indices <- function(covid) {
