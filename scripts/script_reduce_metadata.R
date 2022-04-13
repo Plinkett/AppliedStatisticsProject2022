@@ -28,23 +28,6 @@ add_indices <- function(covid) {
   }
 }
 
-covid <- read.csv("metadata_filtrato.tsv", sep="\t")
-any(is.na(covid$missing_data))
-sum(is.na(covid$missing_data))
-nrow(covid)
-# setwd("C://users//carlo//Documents//AppliedStatistics")
-# Cancella righe con NA
-covid <- na.omit(covid)
-
-mean(covid$missing_data)
-median(covid$missing_data)
-sd(covid$missing_data)
-
-sum(covid$missing_data > 900)
-sum(covid$missing_data > 1000)
-sum(covid$missing_data > 5000)
-sum(covid$missing_data > 7000)
-
 # Cancelliamo le righe con missing_data > 900 
 # covid <- subset(covid, covid$missing_data <= 900)
 
@@ -152,10 +135,34 @@ mutation_frequencies <- function(dfcovid, mutations) {
 # Function that filters the mutations that appear less than 5% of the time
 filter5percent <- function(frequencies, totalsamples) {
   frequencies[,3] <- frequencies[,2] / totalsamples
-  frequencies <- subset(frequencies, frequencies[,3] > 0.05)
+  frequencies <- subset(frequencies, frequencies[,3] >= 0.05)
   frequencies <- frequencies[,-3]
   return(as.data.frame(frequencies))
 }
+
+filter1percent <- function(frequencies, totalsamples) {
+  frequencies[,3] <- frequencies[,2] / totalsamples
+  frequencies <- subset(frequencies, frequencies[,3] >= 0.01)
+  frequencies <- frequencies[,-3]
+  return(as.data.frame(frequencies))
+}
+
+filter001percent <- function(frequencies, totalsamples) {
+  frequencies[,3] <- frequencies[,2] / totalsamples
+  frequencies <- subset(frequencies, frequencies[,3] > 0.001)
+  frequencies <- frequencies[,-3]
+  return(as.data.frame(frequencies))
+}
+
+filter005percent <- function(frequencies, totalsamples) {
+  frequencies[,3] <- frequencies[,2] / totalsamples
+  frequencies <- subset(frequencies, frequencies[,3] > 0.005)
+  frequencies <- frequencies[,-3]
+  frequencies <- as.data.frame(frequencies)
+  frequencies[,1] <- gsub("\\.", ":", frequencies[,1])
+  return(frequencies)
+}
+
 
 # sapply(1:10, list_mutations) OR
 # sapply(1:10, function(mutations) strsplit((aasequence),","))
