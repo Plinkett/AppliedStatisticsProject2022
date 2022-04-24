@@ -6,7 +6,7 @@
 
 #frequencies_b117 <- mutations_frequencies(dfcovid_b117,mutations_b117)
 
-#relevant_mutations <- filter5percent(frequencies_b117, nrow(dfcovid_b117))
+#relevant_mutations <- filter05percent(frequencies_b117, nrow(dfcovid_b117))
 
 #binmatrix_b117 <- build_matrix(dfcovid_b117, relevant_mutations)
 
@@ -27,23 +27,6 @@ add_indices <- function(covid) {
     covid[i,10] <- i
   }
 }
-
-covid <- read.csv("metadata_filtrato.tsv", sep="\t")
-any(is.na(covid$missing_data))
-sum(is.na(covid$missing_data))
-nrow(covid)
-# setwd("C://users//carlo//Documents//AppliedStatistics")
-# Cancella righe con NA
-covid <- na.omit(covid)
-
-mean(covid$missing_data)
-median(covid$missing_data)
-sd(covid$missing_data)
-
-sum(covid$missing_data > 900)
-sum(covid$missing_data > 1000)
-sum(covid$missing_data > 5000)
-sum(covid$missing_data > 7000)
 
 # Cancelliamo le righe con missing_data > 900 
 # covid <- subset(covid, covid$missing_data <= 900)
@@ -149,13 +132,17 @@ mutation_frequencies <- function(dfcovid, mutations) {
   return(cbind(mutations,t(freq)))
 }
 
-# Function that filters the mutations that appear less than 5% of the time
-filter5percent <- function(frequencies, totalsamples) {
+# Function that filters the mutations that appear less than 0.05% of the time
+
+filter05percent <- function(frequencies, totalsamples) {
   frequencies[,3] <- frequencies[,2] / totalsamples
-  frequencies <- subset(frequencies, frequencies[,3] > 0.05)
+  frequencies <- subset(frequencies, frequencies[,3] > 0.005)
   frequencies <- frequencies[,-3]
-  return(as.data.frame(frequencies))
+  frequencies <- as.data.frame(frequencies)
+  frequencies[,1] <- gsub("\\.", ":", frequencies[,1])
+  return(frequencies)
 }
+
 
 # sapply(1:10, list_mutations) OR
 # sapply(1:10, function(mutations) strsplit((aasequence),","))
@@ -245,6 +232,13 @@ build_matrix <- function(dfcovid, important_mutations) {
 
 
 
-
-
+# For UK in B.1.1.7
+uk <- subset(binmatrix_b117, binmatrix_b117$country == "United Kingdom")
+unique_dates <- as.data.frame(unique(uk$date))
+date_freq <- matrix(NA, 0, 2, dimnames = c("Date", "Samples"))
+for(i in 1:nrow(unique_dates)) {
+  freq <- sum(binmatrix_b117$date == unique_dates[i,1])
+  date_freq <- rbind(date_freq, c(unique_dates[i,1], freq))
+}
+colnames(date_freq) <- c("Date", "Sample")
 
