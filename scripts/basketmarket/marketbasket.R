@@ -22,16 +22,16 @@ library(arulesViz)
 # Keep in mind that arules and its algorithms receive as input data in
 # the "transactions" format and NOT the dataframe format.
 
-data("Groceries")
-class(Groceries)
+data("groceries")
+class(groceries)
 
 # The inspect() method helps us explore the format of the dataset
 # Each row is a transaction
-inspect(head(Groceries,2))
+inspect(head(groceries,2))
 
 # Support -> In how many transactions does the item appear? 
 # Confidence ->
-grocery_rules <- apriori(Groceries, parameter = list(support = 0.01, confidence = 0.5))
+grocery_rules <- apriori(groceries, parameter = list(support = 0.01, confidence = 0.5))
 
 # Let's try to identify read the output of apriori
 # minval -> minimum value of the support to even be considere (given by us at the beginning)
@@ -51,16 +51,16 @@ inspect(head(sort(grocery_rules, by = "confidence"), 3))
 # {infrequent item} => {whol milk}, with a VERY high confidence because of the reasons above
 # I guess we could remove the most frequent items from the right-hand side
 
-wholemilk_rules <- apriori(data=Groceries, parameter=list (supp=0.001,conf = 0.08), appearance = list (rhs="whole milk"))
+wholemilk_rules <- apriori(data=groceries, parameter=list (supp=0.001,conf = 0.08), appearance = list (rhs="whole milk"))
 
 
-wholemilk_rules <- apriori(data=Groceries, parameter=list (supp=0.01,conf = 0.5), appearance = list (rhs="whole milk"))
+wholemilk_rules <- apriori(data=groceries, parameter=list (supp=0.01,conf = 0.5), appearance = list (rhs="whole milk"))
 # We get the top 10 rules (by confidence) ending in wholemilk
 inspect(head(sort(wholemilk_rules, by = "confidence"),10))
 # Higher confidence => stronger rules
 
 # How can we plot this?
-itemFrequencyPlot(Groceries, topN = 10)
+itemFrequencyPlot(groceries, topN = 10)
 
 
 
@@ -83,7 +83,10 @@ data <- as(AdultUCI, "transactions")
 
 
 
-
-
-
-
+groceries <- read.transactions("Market_Basket_Optimisation.csv",sep=",",rm.duplicates=TRUE)
+str(groceries)
+rules <- apriori(data=groceries, parameter=list(support=0.01,confidence=0.2))
+itemFrequencyPlot(groceries, topN=10)
+inspect(head(sort(rules,by="confidence")))
+X11()
+plot(rules, method="graph",measure="confidence",shading="lift")
