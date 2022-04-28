@@ -9,8 +9,8 @@ for(i in 790:800) {
     binmatrix <- build_matrix(dfCovidLineage, relevant_mutations)
     filename <- tolower(currentLineage)
     filename <- gsub('\\.','',filename)
-    dir.create(filename)
-    dirname <- filename
+    dir.create(toupper(filename))
+    dirname <- toupper(filename)
     filename <- paste(filename,".csv",sep="")
     write.csv(data.frame(frequencies), file = paste(dirname,"/frequencies_", filename, sep=""),row.names=FALSE)
     write.csv(data.frame(binmatrix), file = paste(dirname,"/binmatrix_", filename, sep=""),row.names=FALSE)
