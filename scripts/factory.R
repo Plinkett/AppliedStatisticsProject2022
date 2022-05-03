@@ -1,4 +1,4 @@
-for(i in 790:800) {
+for(i in 149:471) {
     currentLineage <- lineages_frequencies$lineages[i]
     numberOfSamples <- lineages_frequencies$V2[i]
     dfCovidLineage <- subset(dfcovid, dfcovid$pango_lineage == currentLineage)
@@ -17,6 +17,23 @@ for(i in 790:800) {
     remove(dfCovidLineage)
     gc()
 }
+
+# For a lineage of your choice, in this case "B.1"
+currentLineage <- "B.1"
+dfCovidLineage <- subset(dfcovid, dfcovid$pango_lineage == "B.1")
+numberOfSamples <- nrow(dfCovidLineage)
+mutations <- as.data.frame(matrix(nrow=0,ncol=1))
+mutations <- fetch_mutations(dfCovidLineage, mutations)
+frequencies <- mutation_frequencies(dfCovidLineage, mutations)
+relevant_mutations <- filter05percent(frequencies, numberOfSamples)
+binmatrix <- build_matrix(dfCovidLineage, relevant_mutations)
+filename <- tolower(currentLineage)
+dir.create(toupper(filename))
+dirname <- toupper(filename)
+filename <- gsub('\\.','',filename)
+filename <- paste(filename,".csv",sep="")
+write.csv(data.frame(frequencies), file = paste(dirname,"/frequencies_", filename, sep=""),row.names=FALSE)
+write.csv(data.frame(binmatrix), file = paste(dirname,"/binmatrix_", filename, sep=""),row.names=FALSE)
 
 fetch_mutations <- function(covid_df, unique_mutations) {
   # Assumes aaSubstitutions is the 9th column!
@@ -109,3 +126,4 @@ build_matrix <- function(dfcovid, important_mutations) {
   colnames(finalmatrix) <- c("lineage", "country", "date", t(important_mutations[,1]))
   return(finalmatrix)
 }
+
