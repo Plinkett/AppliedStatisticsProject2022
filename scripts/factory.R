@@ -1,4 +1,7 @@
-for(i in 790:800) {
+dfcovid <- read.csv("metadata_humans_final_index.csv")
+lineages_frequencies <- read.csv("lineages_frequencies.csv")
+
+for(i in 30:55) {
     currentLineage <- lineages_frequencies$lineages[i]
     numberOfSamples <- lineages_frequencies$V2[i]
     dfCovidLineage <- subset(dfcovid, dfcovid$pango_lineage == currentLineage)
