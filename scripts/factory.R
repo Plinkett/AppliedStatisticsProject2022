@@ -21,6 +21,21 @@ for(i in 40:65) {
     gc()
 }
 
+currentLineage <- "B"
+dfCovidLineage <- subset(dfcovid, dfcovid$pango_lineage == currentLineage)
+numberOfSamples <- nrow(dfCovidLineage)
+mutations <- as.data.frame(matrix(nrow=0,ncol=1))
+mutations <- fetch_mutations(dfCovidLineage, mutations)
+frequencies <- mutation_frequencies(dfCovidLineage, mutations)
+relevant_mutations <- filter05percent(frequencies, numberOfSamples)
+binmatrix <- build_matrix(dfCovidLineage, relevant_mutations)
+filename <- tolower(currentLineage)
+dir.create(toupper(filename))
+dirname <- toupper(filename)
+filename <- gsub('\\.','',filename)
+filename <- paste(filename,".csv",sep="")
+write.csv(data.frame(frequencies), file = paste(dirname,"/frequencies_", filename, sep=""),row.names=FALSE)
+write.csv(data.frame(binmatrix), file = paste(dirname,"/binmatrix_", filename, sep=""),row.names=FALSE)
 fetch_mutations <- function(covid_df, unique_mutations) {
   # Assumes aaSubstitutions is the 9th column!
   # According to our conventions in the metadata_animals.csv data set
