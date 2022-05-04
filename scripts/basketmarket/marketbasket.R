@@ -8,6 +8,70 @@
 library(arules)
 library(arulesViz)
 
+# FOR A LINEAGE
+# !!!!!! Eseguire quando la directory di partenza è /data/lineages!
+transactions <- read.transactions("B.1.1.7/transactions_b117.csv", sep=",", rm.duplicates=TRUE)
+# Density is ~ 0.04, this means that the matrix is sparse
+summary(transactions)
+items = rev(tail(sort(itemFrequency(transactions)), 15))
+X11()
+barplot(items, las=2, cex.names=0.8, col="gold")
+dev.off()
+
+rules <- apriori(transactions, parameter = list(supp = 0.01, conf = 0.5, maxlen = 15))
+inspect(rules)
+# Avoid mutations by using "none" attribute, I'm excluding the most frequent mutation.
+rules <- apriori(transactions, parameter = list(supp = 0.001, conf = 0.5, maxlen = 15), 
+                 appearance = list(none = c("N.G204R"), default = "both"))
+
+
+# I don't quite know how to read this...
+X11()
+plot(rules, method = "graph", measure = "confidence", shading = "lift")
+dev.off()
+
+# Scatter plot, hue is chosen by lift (most significant I would say)
+X11()
+plot(rules)
+dev.off()
+
+# Scatter plot, hue is chosen by confidence (could be misleading)
+X11()
+plot(rules, measure = "confidence")
+dev.off()
+
+# Two-key plot
+X11()
+plot(rules, method = "two-key plot")
+dev.off()
+
+# Interactive two-key plot
+X11()
+plot(rules, engine = "plotly")
+dev.off()
+
+# Parallel coordinate plot
+X11()
+plot(rules, method="paracoord")
+dev.off()
+
+# Graph network
+subrules <- head(rules, n = 20, by = list("lift","confidence"))
+inspect(subrules)
+X11()
+plot(subrules, method = "graph",  engine = "htmlwidget")
+graphics.off()
+
+#
+
+
+
+
+
+
+
+
+# RANDOM NOTES
 # Apriori algorithm, extracts association rules exploiting the idea that
 # the relative support of X has to be more than or equal than the relative
 # support of a set Y that includes X. On the other hand the relative support
@@ -61,6 +125,11 @@ inspect(head(sort(wholemilk_rules, by = "confidence"),10))
 
 # How can we plot this?
 itemFrequencyPlot(groceries, topN = 10)
+
+
+
+
+
 
 
 

@@ -14,8 +14,6 @@ filterXtoYpercent <- function(frequencies, totalsamples, x, y) {
   return(frequencies)
 }
 
-
-dfLineage <- subset(dfcovid, dfcovid$pango_lineage == "AY.3")
 freq_for_rules <- filterXtoYpercent(frequencies, nrow(binmatrix), 0.01, 0.95)
 attach(freq_for_rules)
 #freq_for_rules <- freq_for_rules[order(-t.freq),]
@@ -30,6 +28,7 @@ tempbin <- tempbin[,!(names(tempbin) %in% mutationsToDrop)]
 df_for_rules <- matrix(nrow=nrow(binmatrix),ncol=nrow(freq_for_rules))
 names <- colnames(tempbin)
 
+
 for(i in 1:nrow(binmatrix)) {
   for(j in 1:length(names)) {
     if(tempbin[i,j] == 1)
@@ -39,8 +38,8 @@ for(i in 1:nrow(binmatrix)) {
 
 df_for_rules <- as.data.frame(df_for_rules)
 
-write.table(df_for_rules,file="testing.csv",row.names = FALSE, col.names=FALSE, sep=",")
-transactions <- read.transactions("testing.csv", sep=",", rm.duplicates=TRUE)
+write.table(df_for_rules,file="transactions_b117.csv",row.names = FALSE, col.names=FALSE, sep=",")
+transactions <- read.transactions("B.1.1.7/transactions_b117.csv", sep=",", rm.duplicates=TRUE)
 itemFrequencyPlot(transactions)
 rules <- apriori(transactions, parameter=list(supp = 0.01, conf = 0.5))
 inspect(rules)

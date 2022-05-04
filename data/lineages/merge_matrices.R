@@ -36,6 +36,22 @@ create_mutations_set_lineages <- function(df1, df2) {
   return(rbind(df1,df2))
 }
 
+setwd("~/Documents/GitHub/AppliedStatisticsProject2022/data/lineages")
+binmatrix_b117 <- read_csv("B.1.1.7/binmatrix_b117.csv")
+binmatrix_ay4 <- read_csv("AY.4/binmatrix_ay4.csv")
+finalmatrix <- create_mutations_set_lineages(binmatrix_ay4, binmatrix_b117)
+remove(binmatrix_ay4, binmatrix_b117)
+gc()
+write.csv(data.frame(finalmatrix),file = "fullmatrix.csv", row.names = FALSE)
+
+#INCOMPLETE
+
+for(i in 1:100) {
+  currentLineage <- lineages_frequencies$lineages[i]
+  
+}
+
+
 # Example of union
 
 finalmatrix <- create_mutations_set_lineages(binmatrix1, binmatrix2)
