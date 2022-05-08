@@ -5,25 +5,39 @@
 # https://www.kirenz.com/post/2020-05-14-r-association-rule-mining/
 # https://www.datacamp.com/community/tutorials/market-basket-analysis-r
 
+# For 3D plots (hopefully)
+# https://rpubs.com/swagatamdas03/507581
+# https://irapoenya.wordpress.com/2020/10/04/rstudio-tutorial-an-intro-to-3d-plots/
+# https://rdrr.io/rforge/arulesViz/man/plot.html
+# https://github.com/mhahsler/arulesViz
+# https://towardsdatascience.com/association-rules-2-aa9a77241654
+# 
+
 library(arules)
 library(arulesViz)
 
 # FOR A LINEAGE
 # !!!!!! Eseguire quando la directory di partenza è /data/lineages!
-transactions <- read.transactions("B.1.1.7/transactions_b117.csv", sep=",", rm.duplicates=TRUE)
+transactions <- read.transactions("AY.103/transactions_ay103.csv", sep=",", rm.duplicates=TRUE)
+# Test with the big 4 lineages into one transaction file
+transactions <- read.transactions("transaction_ay4_b117_ba1_ay103.csv", sep=",", rm.duplicates=TRUE)
 # Density is ~ 0.04, this means that the matrix is sparse
 summary(transactions)
 items = rev(tail(sort(itemFrequency(transactions)), 15))
 X11()
 barplot(items, las=2, cex.names=0.8, col="gold")
 dev.off()
-
+# For AY.103 -> take out S.G142D
+# For B.1.1.7 -> take out N.G204R
 rules <- apriori(transactions, parameter = list(supp = 0.01, conf = 0.5, maxlen = 15))
 inspect(rules)
-# Avoid mutations by using "none" attribute, I'm excluding the most frequent mutation.
+# Avoid mutations by using "none" attribute, I'm excluding the most frequent mutation(s).
+# For B.1.1.7
+rules <- apriori(transactions, parameter = list(supp = 0.01, conf = 0.5, maxlen = 15), 
+                 appearance = list(none = c("N.G204R", "S.G142D","ORF7a.V82A","S.T95I","S.G339D","S.L212I"), default = "both"))
+# For AY.103
 rules <- apriori(transactions, parameter = list(supp = 0.001, conf = 0.5, maxlen = 15), 
-                 appearance = list(none = c("N.G204R"), default = "both"))
-
+                 appearance = list(none = c("S.G142D"), default = "both"))
 
 # I don't quite know how to read this...
 X11()
@@ -56,10 +70,10 @@ plot(rules, method="paracoord")
 dev.off()
 
 # Graph network
-subrules <- head(rules, n = 20, by = list("lift","confidence"))
+subrules <- head(rules, n = 36, by = list("lift","confidence"))
 inspect(subrules)
 X11()
-plot(subrules, method = "graph",  engine = "htmlwidget")
+plot(rules, method = "graph",  engine = "htmlwidget")
 graphics.off()
 
 #

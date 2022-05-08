@@ -38,8 +38,8 @@ for(i in 1:nrow(binmatrix)) {
 
 df_for_rules <- as.data.frame(df_for_rules)
 
-write.table(df_for_rules,file="transactions_b117.csv",row.names = FALSE, col.names=FALSE, sep=",")
-transactions <- read.transactions("B.1.1.7/transactions_b117.csv", sep=",", rm.duplicates=TRUE)
+write.table(df_for_rules,file="AY.103/transactions_ay103.csv",row.names = FALSE, col.names=FALSE, sep=",")
+transactions <- read.transactions("BA.1/transactions_ba1.csv", sep=",", rm.duplicates=TRUE)
 itemFrequencyPlot(transactions)
 rules <- apriori(transactions, parameter=list(supp = 0.01, conf = 0.5))
 inspect(rules)
