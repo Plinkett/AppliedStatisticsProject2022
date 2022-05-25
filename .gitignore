@@ -9,3 +9,10 @@ data/lineages/fullmatrix.csv
 data/lineages/AY.4/binmatrix_ay4.csv
 data/lineages/B.1.1.7/binmatrix_b117.csv
 data/lineages/transaction_ay4_b117_ba1_ay103.csv
+data/lineages/B.1.1.7/transaction_b117_005_95_filter.csv
+data/lineages/B.1.1.7/transaction_b117_no_filter.csv
+data/lineages/AY.4/transaction_ay4_no_filter.csv
+data/lineages/AY.4/transaction_ay4_005_95_filter.csv
+data/lineages/AY.103/transaction_ay103_no_filter.csv
+data/lineages/AY.103/transaction_ay103_005_95_filter.csv
+data/lineages/newfullmatrix.csv

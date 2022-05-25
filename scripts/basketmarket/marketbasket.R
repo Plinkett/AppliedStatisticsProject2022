@@ -15,84 +15,103 @@
 library(arules)
 library(arulesViz)
 
-# FOR A SINGLE LINEAGE
-# !!!!!! Eseguire quando la directory di partenza è /data/lineages!
-transactions <- read.transactions("AY.103/transactions_ay103.csv", sep=",", rm.duplicates=TRUE)
-transactions <- read.transactions("B.1.1.7/transactions_b117.csv", sep=",", rm.duplicates=TRUE)
-# Test with the big 4 lineages into one transaction file
-transactions <- read.transactions("transaction_ay4_b117_ba1_ay103.csv", sep=",", rm.duplicates=TRUE)
+# Strategy for generating rules
+# Don't filter and use high support, rules will be overwhelmingly about the most common
+# mutations. There will also be many rules (limit length to 3 or 4). Filter the rules by lift
+# 1.1 might be a good choice. Keep those, I went from 100k to 2k rules.
+# Then reconsider the transactions and filter out the most common mutations (above 80%). 
+# Now generate rules from those transactions. Put the rules together 
 
 #--------------------------------------------------------------------------------------------
 # Build and save rules for AY.4
-transactions <- read.transactions("AY.4/transactions_ay4.csv", sep=",", rm.duplicates=TRUE)
+transactions <- read.transactions("AY.4/transaction_ay4_005_95_filter.csv", sep=",", rm.duplicates=TRUE)
 summary(transactions)
-items = rev(tail(sort(itemFrequency(transactions)), 15))
+items = rev(tail(sort(itemFrequency(transactions)), 91))
+
 X11()
 barplot(items, las=2, cex.names=0.8, col="gold")
 dev.off()
-rules0001ay4 <- apriori(transactions, parameter = list(supp = 0.001, conf = 0.5))
-rules001ay4 <- apriori(transactions, parameter = list(supp = 0.01, conf = 0.5))
-# Exclude "ORF7.aV82A", "S.T95I", "S.G142D" from rules
-rules <- apriori(transactions, parameter = list(supp = 0.001, conf = 0.5), 
-                 appearance = list(none = c("ORF7a.V82A", "S.T95I", "S.G142D"), default = "both"))
-# Very few rules...
-# So: consider mutations > 95% and < 5%, BUT consider a support of 0.1%
-write(rules0001ay4, file = "AY.4/rules_ay4_0001.csv", sep = ",", quote = TRUE, row.names = FALSE)
-write(rules001ay4, file = "AY.4/rules_ay4_001.csv", sep = ",", quote = TRUE, row.names = FALSE)
-write.PMML(rules0001ay4, file = "AY.4/rules_ay4_0001.xml")
-write.PMML(rules001ay4, file = "AY.4/rules_ay4_001.xml")
+# FINAL PARAMETERS ON OVERALL MATRIX!!!!!
+# Minimum support of 0.01
+# Minimum confidence of 0.8
+# Maximum length of 4
+rules <- apriori(transactions, parameter = list(supp = 0.005, conf = 0.8, maxlen = 4))
+
+# We want rules with lift >= 1.1
+rulesay4 <- sort(subset(rules, subset = (lift >= 1.1 | lift <= 0.9)), by="lift") 
+rulesay4
+
+write(rulesay4, file = "AY.4/rules_ay4_filtered.csv", sep = ",", quote = TRUE, row.names = FALSE)
+write.PMML(rulesay4, file = "AY.4/rules_ay4.xml")
 
 # Same thing for B.1.1.7
-transactions <- read.transactions("B.1.1.7/transactions_b117.csv", sep=",", rm.duplicates=TRUE)
-rules0001b117 <- apriori(transactions, parameter = list(supp = 0.001, conf = 0.5))
-rules001b117 <- apriori(transactions, parameter = list(supp = 0.01, conf = 0.5))
-write(rules0001b117, file = "B.1.1.7/rules_b117_0001.csv", sep = ",", quote = TRUE, row.names = FALSE)
-write(rules001b117, file = "B.1.1.7/rules_b117_001.csv", sep = ",", quote = TRUE, row.names = FALSE)
-write.PMML(rules0001b117, file = "B.1.1.7/rules_b117_0001.xml")
-write.PMML(rules001b117, file = "B.1.1.7/rules_b117_001.xml")
+transactions <- read.transactions("B.1.1.7/transaction_b117_no_filter.csv", sep=",", rm.duplicates=TRUE)
+items = rev(tail(sort(itemFrequency(transactions)), 128))
+X11()
+barplot(items, las=2, cex.names=0.8, col="gold")
+dev.off()
+rules <- apriori(transactions, parameter = list(supp = 0.005, conf = 0.8, maxlen = 4))
+rulesb117 <- sort(subset(rules, subset = (lift >= 1.1 | lift <= 0.9)), by="lift") 
+rulesb117
+
+write(rulesb117, file = "B.1.1.7/rules_b117_filtered.csv", sep = ",", quote = TRUE, row.names = FALSE)
+write.PMML(rulesb117, file = "B.1.1.7/rules_b117.xml")
+
 # BA.1
 transactions <- read.transactions("BA.1/transactions_ba1.csv", sep=",", rm.duplicates=TRUE)
-rules0001ba1 <- apriori(transactions, parameter = list(supp = 0.001, conf = 0.5, maxlen = 15))
-rules001ba1 <- apriori(transactions, parameter = list(supp = 0.01, conf = 0.5, maxlen = 15))
-write(rules0001ba1, file = "BA.1/rules_ba1_0001.csv", sep = ",", quote = TRUE, row.names = FALSE)
-write(rules001ba1, file = "BA.1/rules_ba1_001.csv", sep = ",", quote = TRUE, row.names = FALSE)
-write.PMML(rules0001ba1, file = "BA.1/rules_ba1_0001.xml")
-write.PMML(rules001ba1, file = "BA.1/rules_ba1_001.xml")
+items = rev(tail(sort(itemFrequency(transactions)), 128))
+X11()
+barplot(items, las=2, cex.names=0.8, col="gold")
+dev.off()
+
+
+rules <- apriori(transactions, parameter = list(supp = 0.005, conf = 0.8, maxlen = 4))
+write(rules, file = "BA.1/rules_ba1.csv", sep = ",", quote = TRUE, row.names = FALSE)
+write.PMML(rules, file = "BA.1/rules_ba1.xml")
 
 # AY.103
-transactions <- read.transactions("AY.103/transactions_ay103.csv", sep=",", rm.duplicates=TRUE)
-rules0001ay103 <- apriori(transactions, parameter = list(supp = 0.001, conf = 0.5))
-rules001ay103 <- apriori(transactions, parameter = list(supp = 0.01, conf = 0.5))
-write(rules0001ay103, file = "AY.103/rules_ay103_0001.csv", sep = ",", quote = TRUE, row.names = FALSE)
-write(rules001ay103, file = "AY.103/rules_ay103_001.csv", sep = ",", quote = TRUE, row.names = FALSE)
-write.PMML(rules0001ay103, file = "AY.103/rules_ay103_0001.xml")
-write.PMML(rules001ay103, file = "AY.103/rules_ay103_0001.xml")
+transactions <- read.transactions("AY.103/transaction_ay103_no_filter.csv", sep=",", rm.duplicates=TRUE)
+items = rev(tail(sort(itemFrequency(transactions)), 128))
+X11()
+barplot(items, las=2, cex.names=0.8, col="gold")
+dev.off()
 
-rules0001tot <- c(rules0001ba1, rules0001ay103, rules0001b117, rules0001ay4)
-rules001tot <- c(rules001ba1, rules001ay103, rules001b117, rules001ay4)
-rules <- rules001tot
-# SAVE ALL RULES
+rules <- apriori(transactions, parameter = list(supp = 0.005, conf = 0.8, maxlen = 4))
+rulesay103 <- sort(subset(rules, subset = (lift >= 1.1 | lift <= 0.9)), by="lift") 
+rulesay103
 
-write(rules0001tot, file = "ay4_b117_ba1_ay103_0001_rules.csv", sep = ",", quote = TRUE, row.names = FALSE)
-write.PMML(rules0001tot, file = "ay4_b117_ba1_ay103_0001_rules.xml")
-write(rules001tot, file = "ay4_b117_ba1_ay103_001_rules.csv", sep = ",", quote = TRUE, row.names = FALSE)
-write.PMML(rules001tot, file = "ay4_b117_ba1_ay103_001_rules.xml")
+write(rulesay103, file = "AY.103/rules_ay103_filtered.csv", sep = ",", quote = TRUE, row.names = FALSE)
+write.PMML(rulesay103, file = "AY.103/rules_ay103.xml")
 
+rulesay103 <- read.csv("AY.103/rules_ay103_filtered.csv", sep=",")
+rulesb117 <- read.csv("B.1.1.7/rules_b117_filtered.csv", sep=",")
+rulesay4 <- read.csv("AY.4/rules_ay4_filtered.csv", sep=",")
+rulesTot <- rbind(rulesay4,rulesb117,rulesay103)
 
+write.csv(rulesTot, file = "rules_ay4_b117_ay103.csv", row.names = FALSE)
+rulesTot <- read.csv("rules_ay4_b117_ay103.csv")
 
-test <- read.PMML("AY.103/rules_ay103_001.csv")
+#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+# PLOT FOR RULES TOT
 
-# EXPERIMENTING WITH PLOTS
+support <- jitter(rulesTot$support,2)
+confidence <- jitter(rulesTot$confidence, 2)
+lift <- jitter(rulesTot$lift, 2)
+
+X11()
+plot(support, log(lift), pch=21)
+
 #-------------------------------------------------------------------------------------------
 # Density is ~ 0.04, this means that the matrix is sparse
 summary(transactions)
-items = rev(tail(sort(itemFrequency(transactions)), 15))
+items = rev(tail(sort(itemFrequency(transactions)), 100))
 X11()
 barplot(items, las=2, cex.names=0.8, col="gold")
 dev.off()
 # For AY.103 -> take out S.G142D
 # For B.1.1.7 -> take out N.G204R
-rules <- apriori(transactions, parameter = list(supp = 0.01, conf = 0.5, maxlen = 15))
+rules <- apriori(transactions, parameter = list(supp = 0.9, conf = 0.9, maxlen = 3))
 inspect(rules)
 # Avoid mutations by using "none" attribute, I'm excluding the most frequent mutation(s).
 # For B.1.1.7
@@ -140,63 +159,14 @@ plot(rules, method = "graph",  engine = "htmlwidget")
 graphics.off()
 
 
-
-
-
-#----------------------------------------------------------------------------
-# FOR HANDLING THE 4 BIG LINEAGES ALL AT ONCE
-#----------------------------------------------------------------------------
-transactions <- read.transactions("transaction_ay4_b117_ba1_ay103.csv", sep=",", rm.duplicates=TRUE)
-# With a support of 0.001 (over 1.5 mln samples) we consider 
-rules <- apriori(transactions, parameter = list(supp = 0.001, conf = 0.5, maxlen = 15)) 
-# Let's see the most common mutations
-items = rev(tail(sort(itemFrequency(transactions)), 15))
-X11()
-barplot(items, las=2, cex.names=0.8, col="gold")
-dev.off()
-
-# Now we ignore mutations that appear more than 20% of the time
-rules <- apriori(transactions, parameter = list(supp = 0.007, conf = 0.5, maxlen = 15), 
-                 appearance = list(none = c("S.G142D","ORF7a.V82A","S.T95I"), default = "both"))
-
-write(rules, file = "rules_filtered.csv", sep = ",", quote = TRUE, row.names = FALSE)
-
-# Scatter plot, hue is chosen by lift (most significant I would say)
-X11()
-plot(rules)
-dev.off()
-
-# Scatter plot, hue is chosen by confidence (could be misleading)
-X11()
-plot(rules, measure = "confidence")
-dev.off()
-
-# Two-key plot
-X11()
-plot(rules, method = "two-key plot")
-dev.off()
-
-# Interactive two-key plot
-X11()
-plot(rules, engine = "plotly")
-dev.off()
-
-# Parallel coordinate plot
-X11()
-plot(rules, method="paracoord")
-dev.off()
-
-# Graph network
-subrules <- head(rules, n = 36, by = list("lift","confidence"))
-inspect(subrules)
-X11()
-plot(rules, method = "graph",  engine = "htmlwidget")
-graphics.off()
-
 #-------------------------------------------------------------------------------
 # FOR CHECKING VALIDITY OF RULES
-# We read the rules 
-rulescsv <- read.csv("ay4_b117_ba1_ay103_001_rules.csv")
+# We read the rules and clean them
+
+# INIZIA QUAAAAAAAA
+
+setwd("~/Documents/GitHub/AppliedStatisticsProject2022/data/lineages")
+rulescsv <- read.csv("rules_ay4_b117_ay103.csv")
 head(rulescsv)
 
 clean_rules <- function(rule) {
@@ -204,34 +174,53 @@ clean_rules <- function(rule) {
   rule <- gsub(' => ', ',', rule)
   return(rule)
 }
-result <- t(as.data.frame(lapply(rulescsv[,1], clean_rules)))
+
+result <- as.data.frame(lapply(rulescsv[,1], clean_rules))
+result <- as.data.frame(t(result))
 rulescsv[,"filtered"] <- result[,1]
 
+toRemove <- numeric()
+for(i in 1:nrow(rulescsv)) {
+  rule_str <- rulescsv[i,1]
+  if(substring(rule_str, 1, 2) == "{}")
+     toRemove <- append(toRemove, i) 
+}
+
+if(length(toRemove) != 0)
+  rulescsv <- rulescsv[-toRemove,]
 #Cleaning
 remove(result,rules)
-# We could start, for example, with AY.3
+# We could start, for example, with AY.44
 # Then we will put this inside a for loop
-setwd("~/Documents/GitHub/AppliedStatisticsProject2022/data/lineages")
+
+# CAMBIATE IL LINEAGE A QUELLO CHE VOLETE
 test_lineage <- read.csv("B.1.2/binmatrix_b12.csv")
 # First single out applicable rules
-# 
+# TO MODIFY!!!!!
 app_rules <- as.data.frame(matrix(nrow = 0, ncol = ncol(rulescsv)))
+app_rules_none <- as.data.frame(matrix(nrow = 0, ncol = ncol(rulescsv)))
+
 for(i in 1:nrow(rulescsv)) {
   tokens <- strsplit(rulescsv$filtered[i], ",") 
   applicable <- TRUE
   if(!(tokens[[1]][1] == "")) {
-    for(j in 1:length(tokens[[1]]))
+    for(j in 1:(length(tokens[[1]])-1))
       if(!(tokens[[1]][j] %in% colnames(test_lineage))) 
         applicable <- FALSE
     if(applicable == TRUE)
-      app_rules <- rbind(app_rules, rulescsv[i,])
+      if(tokens[[1]][length(tokens[[1]])] %in% colnames(test_lineage)) 
+        app_rules <- rbind(app_rules, rulescsv[i,])
+      else
+        app_rules_none <- rbind(app_rules_none, rulescsv[i,])
   }
 }
 
-app_rules[,"count_in_lineage"] = NA
-app_rules[,"success_rate"] = NA
+nrules <- nrow(app_rules)
+app_rules <- rbind(app_rules, app_rules_none)
+app_rules[,"count_in_lineage"] <- 0
+app_rules[,"success_rate"] <- 0
 
-for(i in 1:nrow(app_rules)) {
+for(i in 1:nrules) {
   tokens <- strsplit(app_rules$filtered[i], ",") 
   lhs_length <- length(tokens[[1]]) - 1
   rhs_mutation <- tokens[[1]][lhs_length]
@@ -251,29 +240,14 @@ for(i in 1:nrow(app_rules)) {
   }
   app_rules$count_in_lineage[i] <- nrow(lhs_subset)
   app_rules$success_rate[i] <- sum(lhs_subset[,rhs] == 1) / nrow(lhs_subset)
-  # print(nrow(lhs_subset))
-  #print(sum(lhs_subset[,rhs] == 1))
-  #print(sum(lhs_subset[,rhs] == 0))
 }
 app_rules <- app_rules[,-7]
-write.csv(data.frame(app_rules), file = "AY.103/apprules_ay103_001.csv",row.names=FALSE)
 
+# SALVATE QUAAAAAAAAAAAAAA
+write.csv(data.frame(app_rules), file = "B.1.2/apprules_b12.csv",row.names=FALSE)
 
-test <- rulescsv[10000,7]
-test
-tokens <- strsplit(test, ",") 
-tokens
-length(tokens[[1]])
-rhs_mutation
-# Rhs mutation
-# 
-which(colnames(test_lineage)=="date")
-sum(test_lineage$M.I82T == 1)
-
-
-
-
-
+# Swapping and putting ALL other mutations in the rhs.
+# See success rates.
 
 
 #-------------------------------------------------------------------------------
@@ -322,35 +296,3 @@ inspect(head(sort(grocery_rules, by = "confidence"), 3))
 # this infrequent item appears whole milk also appears. This could lead you to generate a rule like this:
 # {infrequent item} => {whol milk}, with a VERY high confidence because of the reasons above
 # I guess we could remove the most frequent items from the right-hand side
-
-wholemilk_rules <- apriori(data=groceries, parameter=list (supp=0.001,conf = 0.08), appearance = list (rhs="whole milk"))
-
-
-wholemilk_rules <- apriori(data=groceries, parameter=list (supp=0.01,conf = 0.5), appearance = list (rhs="whole milk"))
-# We get the top 10 rules (by confidence) ending in wholemilk
-inspect(head(sort(wholemilk_rules, by = "confidence"),10))
-# Higher confidence => stronger rules
-
-# How can we plot this?
-itemFrequencyPlot(groceries, topN = 10)
-
-# Now let's look at transforming dataframes into transactions
-data("AdultUCI")
-class(AdultUCI)
-View(AdultUCI)
-str(AdultUCI)
-
-# In order to transition to transactions all the columns must in the "factor" form
-AdultUCI <- lapply(AdultUCI, function(x){as.factor(x)})
-str(AdultUCI)
-
-# This still gives us issues...
-data <- as(AdultUCI, "transactions")
-
-groceries <- read.transactions("Market_Basket_Optimisation.csv",sep=",",rm.duplicates=TRUE)
-str(groceries)
-rules <- apriori(data=groceries, parameter=list(support=0.01,confidence=0.2))
-itemFrequencyPlot(groceries, topN=10)
-inspect(head(sort(rules,by="confidence")))
-X11()
-plot(rules, method="graph",measure="confidence",shading="lift")
