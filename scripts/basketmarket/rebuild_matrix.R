@@ -62,7 +62,7 @@ for(i in 1:nrow(binmatrix)) {
 }
 
 df_for_rules <- as.data.frame(df_for_rules)
-write.table(df_for_rules, file="B.1.1.7/transaction_b117_005_95_filter.csv", row.names = FALSE, col.names = FALSE, sep=",")
+write.table(df_for_rules, file="~/transactions_10k_ay103.csv", row.names = FALSE, col.names = FALSE, sep=",")
 remove(list = ls())
 gc()
 # Just checking if it works

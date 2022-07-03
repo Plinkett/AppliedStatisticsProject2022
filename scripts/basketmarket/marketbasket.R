@@ -24,19 +24,22 @@ library(arulesViz)
 
 #--------------------------------------------------------------------------------------------
 # Build and save rules for AY.4
-transactions <- read.transactions("AY.4/transaction_ay4_005_95_filter.csv", sep=",", rm.duplicates=TRUE)
+transactions <- read.transactions("transactions_10k_ay103.csv", sep=",", rm.duplicates=TRUE)
 summary(transactions)
 items = rev(tail(sort(itemFrequency(transactions)), 91))
 
 X11()
+par(mar = c(10,5,10,5))
 barplot(items, las=2, cex.names=0.8, col="gold")
 dev.off()
 # FINAL PARAMETERS ON OVERALL MATRIX!!!!!
 # Minimum support of 0.01
 # Minimum confidence of 0.8
 # Maximum length of 4
-rules <- apriori(transactions, parameter = list(supp = 0.005, conf = 0.8, maxlen = 4))
-
+#BOOKMARK
+rules <- apriori(transactions, parameter = list(supp = 0.0001, conf = 0.6, maxlen = 3))
+rules <- sort(subset(rules, subset = (lift >= 1.1 | lift <= 0.9)), by="lift")
+View(inspect( subset( rules, subset = rhs %pin% "ORF8.P36S" )))
 # We want rules with lift >= 1.1
 rulesay4 <- sort(subset(rules, subset = (lift >= 1.1 | lift <= 0.9)), by="lift") 
 rulesay4

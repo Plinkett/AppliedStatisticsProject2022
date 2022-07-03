@@ -38,11 +38,11 @@ create_mutations_set_lineages <- function(df1, df2) {
   # All of this allows us to use rbind
   return(rbind(df1,df2))
 }
-
+################################################################
 ################################################################
 
 # For B.1.1.7
-b117 <- read_csv("Documents/GitHub/AppliedStatisticsProject2022/data/lineages/B.1.1.7/binmatrix_b117.csv")
+b117 <- read.csv("Documents/GitHub/AppliedStatisticsProject2022/data/lineages/B.1.1.7/binmatrix_b117.csv")
 b117shuffle <- b117[sample(nrow(b117)),]
 b117shuffle <- b117shuffle[sample(nrow(b117)),]
 
@@ -53,7 +53,7 @@ remove(b117, b117shuffle)
 gc()
 
 # For AY.4
-ay4 <- read_csv("Documents/GitHub/AppliedStatisticsProject2022/data/lineages/AY.4/binmatrix_ay4.csv")
+ay4 <- read.csv("Documents/GitHub/AppliedStatisticsProject2022/data/lineages/AY.4/binmatrix_ay4.csv")
 ay4shuffle <- ay4[sample(nrow(ay4)),]
 ay4shuffle <- ay4[sample(nrow(ay4)),]
 
@@ -62,7 +62,7 @@ remove(ay4, ay4shuffle)
 gc()
 
 # For BA.1
-ba1 <- read_csv("Documents/GitHub/AppliedStatisticsProject2022/data/lineages/BA.1/binmatrix_ba1.csv")
+ba1 <- read.csv("Documents/GitHub/AppliedStatisticsProject2022/data/lineages/BA.1/binmatrix_ba1.csv")
 ba1shuffle <- ba1[sample(nrow(ba1)),]
 ba1shuffle <- ba1[sample(nrow(ba1)),]
 
@@ -72,7 +72,7 @@ gc()
 
 
 # For BA.1.1
-ba11 <- read_csv("Documents/GitHub/AppliedStatisticsProject2022/data/lineages/BA.1.1/binmatrix_ba11.csv")
+ba11 <- read.csv("Documents/GitHub/AppliedStatisticsProject2022/data/lineages/BA.1.1/binmatrix_ba11.csv")
 ba11shuffle <- ba11[sample(nrow(ba11)),]
 ba11shuffle <- ba11[sample(nrow(ba11)),]
 
@@ -128,6 +128,7 @@ var_explained_df %>%
 
 # Plain old R (professor Arnone's code)
 X11()
+pdf(file="~/scree_4_lineages.pdf")
 plot(cumsum(pc$sd^2)/sum(pc$sd^2), type='b', axes=F, xlab='number of components', 
      ylab='contribution to the total variance', ylim=c(0,1))
 abline(h=1, col='blue')
@@ -135,10 +136,12 @@ abline(h=0.8, lty=2, col='blue')
 box()
 axis(2,at=0:10/10,labels=0:10/10)
 axis(1,at=1:ncol(binmatrix),labels=1:ncol(binmatrix),las=2)
+dev.off()
 graphics.off()
 
 # Plot along first 2 PCs for first 4 lineages
 x11()
+
 par(mfrow = c(1,3))
 plot(pc$scores[,1], pc$scores[,2], xlab="PC1", ylab="PC2", main="Scores with no jitter", col=factor(binmatrix$lineage))
 abline(h=0, v=0, lty=2, col='black')
@@ -146,13 +149,15 @@ plot(pc$scores[,1] + rnorm(40000, sd=0.005), pc$scores[,2] + rnorm(40000, sd=0.0
 abline(h=0, v=0, lty=2, col='black')
 plot(pc$scores[,1] + rnorm(40000, sd=0.01), pc$scores[,2] + rnorm(40000, sd=0.1), xlab="PC1", ylab="PC2", main ="Scores with gaussian jitter (sd = 0.1)", col=factor(binmatrix$lineage))
 abline(h=0, v=0, lty=2, col='black')
-
+dev.off()
 # The plots with jitter give us an idea of the sizes of the clusters before-hand
 
 X11()
-plot(pc$scores[,1] + rnorm(40000, sd=0), pc$scores[,2] + rnorm(40000, sd=0), xlab="PC1", ylab="PC2", main ="Scores with gaussian jitter (sd = 0.1)", col=factor(binmatrix$lineage))
+pdf(file="~/plot_lineages.pdf")
+plot(pc$scores[,1], pc$scores[,2], xlab="PC1", ylab="PC2", main ="Scores (no jitter)", col=factor(binmatrix$lineage))
 abline(h=0, v=0, lty=2, col='black')
 legend('bottomright',unique(binmatrix$lineage),col=1:6,pch=15)
+dev.off()
 X11()
 barplot(pc$loadings[which(abs(pc$loadings[,1]) > 0.1),1], main="PC 1 Loadings Plot", las=2)
 
@@ -220,6 +225,7 @@ ay4shuffle <- ay4[sample(nrow(ay4)),]
 
 ay4_topk <- ay4shuffle[1:10000,-c(2,3)]
 remove(ay4, ay4shuffle)
+rownames(ay4_topk) <- NULL
 gc()
 
 ay4_topk <- ay4_topk[,-1]
@@ -230,6 +236,184 @@ plot(Hierar_cl)
 abline(h = 110, col = "green")
 fit <- cutree(Hierar_cl, k = 3 )
 
-# One-way MANOVA
-fit <- manova(as.matrix(iris4) ~ species.name)
-summary.manova(fit,test="Wilks")
+###########################################################################
+#                           Per Carlos
+###########################################################################
+
+# Lineages BA.1.1 and AY.103
+# PCA 
+
+# For BA.1.1
+ba11 <- read.csv("Documents/GitHub/AppliedStatisticsProject2022/data/lineages/BA.1.1/binmatrix_ba11.csv")
+ba11shuffle <- ba11[sample(nrow(ba11)),]
+ba11shuffle <- ba11[sample(nrow(ba11)),]
+ba11_topk <- ba11shuffle[1:10000,-c(2,3)]
+rownames(ba11_topk) <- NULL
+remove(ba11, ba11shuffle)
+gc()
+
+# For AY.103
+ay103 <- read.csv("Documents/GitHub/AppliedStatisticsProject2022/data/lineages/AY.103/binmatrix_ay103.csv")
+ay103shuffle <- ay103[sample(nrow(ay103)),]
+ay103shuffle <- ay103[sample(nrow(ay103)),]
+ay103_topk <- ay103shuffle[1:10000,-c(2,3)]
+rownames(ay103_topk) <- NULL
+remove(ay103, ay103shuffle)
+gc()
+
+# Merge matrices
+binmatrix <- create_mutations_set_lineages(ay103_topk, ba11_topk)
+
+forpc <- binmatrix[,-2]
+pc <- princomp(forpc, score =T)
+summary(pc)
+
+# Screeplot
+X11()
+plot(cumsum(pc$sd^2)/sum(pc$sd^2), type='b', axes=F, xlab='number of components', 
+     ylab='contribution to the total variance', ylim=c(0,1))
+abline(h=1, col='blue')
+abline(h=0.8, lty=2, col='blue')
+box()
+axis(2,at=0:10/10,labels=0:10/10)
+axis(1,at=1:ncol(forpc),labels=1:ncol(forpc),las=2)
+graphics.off()
+
+X11()
+plot(pc$scores[,1] + rnorm(20000, sd=0.01), pc$scores[,2] + rnorm(20000, sd=0.01), xlab="PC1", ylab="PC2", main ="Scores with gaussian jitter (sd = 0.1)", col=factor(binmatrix$lineage))
+abline(h=0, v=0, lty=2, col='black')
+legend('topleft',unique(binmatrix$lineage),col=1:6,pch=15)
+
+# Perform clustering on AY.103
+
+# We perform hierarchical clustering with Ward Linkage
+ay103_clust <- ay103_topk[,-1]
+distance_mat <- dist(ay103_clust, method = 'euclidean')
+Hierar_cl <- hclust(distance_mat, method = "ward.D")
+X11()
+# The results are promising and it seems that there are 5 well defined groups. 
+# Is this result consistent?
+plot(Hierar_cl, xlab="sample", ylab="height", main = "AY.103 Dendrogram")
+rect.hclust(Hierar_cl, k=5)
+# To be sure of our results we shuffle and extract more samples, can we expect
+# the clustering structure to remain the same?
+ay103 <- read.csv("Documents/GitHub/AppliedStatisticsProject2022/data/lineages/AY.103/binmatrix_ay103.csv")
+ay103shuffle <- ay103[sample(nrow(ay103)),]
+ay103shuffle <- ay103[sample(nrow(ay103)),]
+ay103_topk <- ay103shuffle[1:10000,-c(2,3)]
+rownames(ay103_topk) <- NULL
+remove(ay103, ay103shuffle)
+gc()
+
+fit <- cutree(Hierar_cl, k = 5 )
+
+# PCA for AY.103
+forpc <- ay103_clust
+pc <- princomp(forpc, score = T)
+summary(pc)
+# Screeplot
+X11()
+plot(cumsum(pc$sd^2)/sum(pc$sd^2), type='b', axes=F, xlab='number of components', 
+     ylab='contribution to the total variance', ylim=c(0,1))
+abline(h=1, col='blue')
+abline(h=c(0.5,0.6,0.8,0.9), lty=2, col='blue')
+abline(v=c(5,9,27,44), lty=2, col='red')
+box()
+axis(2,at=0:10/10,labels=0:10/10)
+axis(1,at=1:ncol(forpc),labels=1:ncol(forpc),las=2)
+graphics.off()
+
+# Pairs plot of first 5 PCs
+scores <- pc$scores[,1:5]
+for(i in 1:ncol(scores))
+  scores[,i] <- scores[,i] + rnorm(nrow(scores), sd=0.05)
+# Now let's color them based on the clustering
+fit <- cutree(Hierar_cl, k = 5)
+X11()
+pairs(scores, col=fit, main ="Pairs plot PCA with jitter (sd = 0.05) - AY.103")
+# Do we see any special characteristics in the clusters?
+# We plot the mutation frequencies barplots
+mutation_frequencies_bis <- function(binmatrix) {
+  freq <-  as.data.frame(matrix(nrow=ncol(binmatrix),ncol=2))
+  colnames(freq) <- c("mutation", "frequency")
+  for(i in 1:ncol(binmatrix)) {
+    freq[i,1] <- colnames(binmatrix)[i]
+    freq[i,2] <- sum(binmatrix[,i] == 1)/nrow(binmatrix)
+  }
+  return(freq)
+}
+
+freq <- mutation_frequencies_bis(forpc)
+freq <- freq[order(freq$frequency, decreasing = T),] 
+View(freq)
+X11()
+par(mar=c(10,5,10,5))
+barplot(height = freq$frequency, names = freq$mutation, las = 2, ylab="mutation percentage", main="Barplot of mutation frequencies in AY.103")
+dev.print(pdf, 'barplot_ay103.pdf')
+cluster <- list(data.frame(), data.frame(), data.frame(), data.frame(), data.frame())
+
+for(i in levels(factor(fit))) {
+  cluster[i] <- forpc[which(fit==as.numeric(i)),]
+}
+cluster  
+# Barplot with percentages of lineages (sizes)
+sum(fit == 1)  
+sum(fit == 2)
+sum(fit == 3)
+sum(fit == 4)
+sum(fit == 5)
+
+cluster1 <- forpc[fit == 1,]
+cluster1
+freq1 <- mutation_frequencies_bis(cluster1)
+freq1 <- freq1[match(freq$mutation, freq1$mutation),]
+#freq1 <- freq1[order(freq1$frequency, decreasing = T),] 
+X11()
+par(mar=c(10,5,10,5))
+barplot(height = freq1$frequency, names = freq1$mutation, las = 2, ylab="mutation percentage", main="Barplot cluster 1 in AY.103")
+dev.print(pdf, 'barplot_ay103_c1.pdf')
+cluster1 <- forpc[fit == 2,]
+cluster1
+freq1 <- mutation_frequencies_bis(cluster1)
+freq1 <- freq1[match(freq$mutation, freq1$mutation),]
+#freq1 <- freq1[order(freq1$frequency, decreasing = T),] 
+X11()
+par(mar=c(10,5,10,5))
+barplot(height = freq1$frequency, names = freq1$mutation, las = 2, ylab="mutation percentage", main="Barplot cluster 2 in AY.103")
+dev.print(pdf, 'barplot_ay103_c2.pdf')
+cluster1 <- forpc[fit == 3,]
+cluster1
+freq1 <- mutation_frequencies_bis(cluster1)
+freq1 <- freq1[match(freq$mutation, freq1$mutation),]
+#freq1 <- freq1[order(freq1$frequency, decreasing = T),] 
+X11()
+par(mar=c(10,5,10,5))
+barplot(height = freq1$frequency, names = freq1$mutation, las = 2, ylab="mutation percentage", main="Barplot cluster 3 in AY.103")
+dev.print(pdf, 'barplot_ay103_c3.pdf')
+
+cluster1 <- forpc[fit == 4,]
+cluster1
+freq1 <- mutation_frequencies_bis(cluster1)
+freq1 <- freq1[match(freq$mutation, freq1$mutation),]
+#freq1 <- freq1[order(freq1$frequency, decreasing = T),] 
+
+X11()
+par(mar=c(10,5,10,5))
+barplot(height = freq1$frequency, names = freq1$mutation, las = 2, ylab="mutation percentage", main="Barplot cluster 4 in AY.103")
+dev.print(pdf, 'barplot_ay103_c4.pdf')
+
+cluster1 <- forpc[fit == 5,]
+cluster1
+freq1 <- mutation_frequencies_bis(cluster1)
+freq1 <- freq1[match(freq$mutation, freq1$mutation),]
+#freq1 <- freq1[order(freq1$frequency, decreasing = T),] 
+
+X11()
+par(mar=c(10,5,10,5))
+barplot(height = freq1$frequency, names = freq1$mutation, las = 2, ylab="mutation percentage", main="Barplot cluster 5 in AY.103")
+dev.print(pdf, 'barplot_ay103_c5.pdf')
+
+
+#####################################################
+# For association rules
+#####################################################
