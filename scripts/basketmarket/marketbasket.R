@@ -37,9 +37,9 @@ dev.off()
 # Minimum confidence of 0.8
 # Maximum length of 4
 #BOOKMARK
-rules <- apriori(transactions, parameter = list(supp = 0.0001, conf = 0.6, maxlen = 3))
+rules <- apriori(transactions, parameter = list(supp = 0.005, conf = 0.6, maxlen = 3))
 rules <- sort(subset(rules, subset = (lift >= 1.1 | lift <= 0.9)), by="lift")
-View(inspect( subset( rules, subset = rhs %pin% "ORF8.P36S" )))
+View(inspect( subset( rules, subset = rhs %pin% "ORF1a.G519S" )))
 # We want rules with lift >= 1.1
 rulesay4 <- sort(subset(rules, subset = (lift >= 1.1 | lift <= 0.9)), by="lift") 
 rulesay4

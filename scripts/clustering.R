@@ -177,7 +177,7 @@ b117_topk <- b117shuffle[1:60000,-c(2,3)]
 remove(b117, b117shuffle)
 gc()
 
-forpc <- b117_topk[,-1]
+forpc <- lineage_topk[,-1]
 pc <- princomp(forpc, score =T)
 summary(pc)
 
@@ -349,7 +349,6 @@ View(freq)
 X11()
 par(mar=c(10,5,10,5))
 barplot(height = freq$frequency, names = freq$mutation, las = 2, ylab="mutation percentage", main="Barplot of mutation frequencies in AY.103")
-dev.print(pdf, 'barplot_ay103.pdf')
 cluster <- list(data.frame(), data.frame(), data.frame(), data.frame(), data.frame())
 
 for(i in levels(factor(fit))) {
@@ -371,7 +370,6 @@ freq1 <- freq1[match(freq$mutation, freq1$mutation),]
 X11()
 par(mar=c(10,5,10,5))
 barplot(height = freq1$frequency, names = freq1$mutation, las = 2, ylab="mutation percentage", main="Barplot cluster 1 in AY.103")
-dev.print(pdf, 'barplot_ay103_c1.pdf')
 cluster1 <- forpc[fit == 2,]
 cluster1
 freq1 <- mutation_frequencies_bis(cluster1)
@@ -389,7 +387,6 @@ freq1 <- freq1[match(freq$mutation, freq1$mutation),]
 X11()
 par(mar=c(10,5,10,5))
 barplot(height = freq1$frequency, names = freq1$mutation, las = 2, ylab="mutation percentage", main="Barplot cluster 3 in AY.103")
-dev.print(pdf, 'barplot_ay103_c3.pdf')
 
 cluster1 <- forpc[fit == 4,]
 cluster1
@@ -400,7 +397,6 @@ freq1 <- freq1[match(freq$mutation, freq1$mutation),]
 X11()
 par(mar=c(10,5,10,5))
 barplot(height = freq1$frequency, names = freq1$mutation, las = 2, ylab="mutation percentage", main="Barplot cluster 4 in AY.103")
-dev.print(pdf, 'barplot_ay103_c4.pdf')
 
 cluster1 <- forpc[fit == 5,]
 cluster1
