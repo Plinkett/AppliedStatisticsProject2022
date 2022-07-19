@@ -50,8 +50,9 @@ totalMutations <- as.data.frame(names(binmatrix))
 mutationsToDrop <- setdiff(t(totalMutations), t(mutationsToKeep))
 mutationsToDrop <- as.character(mutationsToDrop)
 binmatrix <- binmatrix[,!(names(binmatrix) %in% mutationsToDrop)]
-df_for_rules <- matrix(nrow=nrow(binmatrix),ncol=nrow(freq_for_rules))
+df_for_rules <- matrix(nrow=nrow(binmatrix),ncol=ncol(binmatrix))
 names <- colnames(binmatrix)
+
 
 
 for(i in 1:nrow(binmatrix)) {
@@ -62,8 +63,47 @@ for(i in 1:nrow(binmatrix)) {
 }
 
 df_for_rules <- as.data.frame(df_for_rules)
-write.table(df_for_rules, file="~/transactions_10k_ay103.csv", row.names = FALSE, col.names = FALSE, sep=",")
+write.table(df_for_rules, file="~/final_rules.csv", row.names = FALSE, col.names = FALSE, sep=",")
 remove(list = ls())
 gc()
 # Just checking if it works
-df_for_rules <- read.csv("AY.4/transaction_ay4_005_95_filter.csv")
+df_for_rules <- read.csv("~/final_rules.csv")
+
+
+
+
+
+
+
+
+
+###################################################
+# Rebulding balanced dataset
+###################################################
+
+# b117, ay4, ay103, ba1, ay3
+# 100k per lineage
+
+b117 <- read_csv("B.1.1.7/binmatrix_b117.csv")
+b117 <- b117[sample(nrow(b117)),]
+b117 <- b117[1:10000,]
+
+ay4 <- read_csv("AY.4/binmatrix_ay4.csv")
+ay4 <- ay4[sample(nrow(ay4)),]
+ay4 <- ay4[1:10000,]
+
+ba1 <- read_csv("BA.1/binmatrix_ba1.csv")
+ba1 <- ba1[sample(nrow(ba1)),]
+ba1 <- ba1[1:10000,]
+
+ay103 <- read_csv("AY.103/binmatrix_ay103.csv")
+ay103 <- ay103[sample(nrow(ay103)),]
+ay103 <- ay103[1:100000,]
+
+binmatrix <- create_mutations_set_lineages(b117, ay4)
+binmatrix <- create_mutations_set_lineages(binmatrix, ba1)
+binmatrix <- create_mutations_set_lineages(binmatrix, ay103)
+remove(b117, ay4, ba1, ay103)
+gc()
+binmatrix <- binmatrix[,-1:-3]
+

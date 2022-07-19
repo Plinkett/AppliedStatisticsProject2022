@@ -36,8 +36,10 @@ scores <- pc$scores[,1:5]
 for(i in 1:ncol(scores))
   scores[,i] <- scores[,i] + rnorm(nrow(scores), sd=0.01)
 X11()
+pdf(file="~/test.pdf")
+par(mar=c(10,5,10,5))
 pairs(scores, main ="Pairs plot PCA with jitter (sd = 0.05) - lineage")
-
+dev.off()
 # hierarchical clustering
 lineage_clust <- lineage_topk[,-1]
 # Compute distance matrix
