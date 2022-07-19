@@ -24,7 +24,7 @@ library(arulesViz)
 
 #--------------------------------------------------------------------------------------------
 # Build and save rules for AY.4
-transactions <- read.transactions("transactions_10k_ay103.csv", sep=",", rm.duplicates=TRUE)
+transactions <- read.transactions("~/ay103.csv", sep=",", rm.duplicates=TRUE)
 summary(transactions)
 items = rev(tail(sort(itemFrequency(transactions)), 91))
 
@@ -37,9 +37,11 @@ dev.off()
 # Minimum confidence of 0.8
 # Maximum length of 4
 #BOOKMARK
-rules <- apriori(transactions, parameter = list(supp = 0.005, conf = 0.6, maxlen = 3))
+rules <- apriori(transactions, parameter = list(supp = 0.001, conf = 0.8, maxlen = 3))
 rules <- sort(subset(rules, subset = (lift >= 1.1 | lift <= 0.9)), by="lift")
-View(inspect( subset( rules, subset = rhs %pin% "ORF1a.G519S" )))
+View(rules)
+View(inspect(rules))
+View(inspect( subset( rules, subset = rhs %pin% "ORF8.P36S" )))
 # We want rules with lift >= 1.1
 rulesay4 <- sort(subset(rules, subset = (lift >= 1.1 | lift <= 0.9)), by="lift") 
 rulesay4
@@ -53,7 +55,7 @@ items = rev(tail(sort(itemFrequency(transactions)), 128))
 X11()
 barplot(items, las=2, cex.names=0.8, col="gold")
 dev.off()
-rules <- apriori(transactions, parameter = list(supp = 0.005, conf = 0.8, maxlen = 4))
+rules <- apriori(transactions, parameter = list(supp = 0.001, conf = 0.6, maxlen = 5))
 rulesb117 <- sort(subset(rules, subset = (lift >= 1.1 | lift <= 0.9)), by="lift") 
 rulesb117
 
@@ -90,7 +92,6 @@ rulesay103 <- read.csv("AY.103/rules_ay103_filtered.csv", sep=",")
 rulesb117 <- read.csv("B.1.1.7/rules_b117_filtered.csv", sep=",")
 rulesay4 <- read.csv("AY.4/rules_ay4_filtered.csv", sep=",")
 rulesTot <- rbind(rulesay4,rulesb117,rulesay103)
-
 write.csv(rulesTot, file = "rules_ay4_b117_ay103.csv", row.names = FALSE)
 rulesTot <- read.csv("rules_ay4_b117_ay103.csv")
 
