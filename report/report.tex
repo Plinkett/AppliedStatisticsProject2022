@@ -55,7 +55,7 @@
 \author{%
 	\textsc{Samuele Del Bello, Stefano Destro, Alessio Frezza,}\\
 	\textsc{Rita Numeroli, Carlos Santillán} \\[1ex] % Your name
-	\textsc{Supervisor: Pietro Pinoli PhD.}\\
+	\textsc{Supervisor: Pietro Pinoli PhD}\\
 	\normalsize  Applied Statistics Project - Politecnico di Milano \\
 }
 \date{July 25th, 2022} 
@@ -88,7 +88,7 @@
 		\item \textbf{Lineage: } A single line of descent or linear chain in the phylogenetic tree.
 		\item \textbf{Amino acid mutation: } A change in the proteins of the sample w.r.t. the original Wuhan sequence. If in protein S the 614th amino acid changed from D to G, the mutation would be labeled as S:D614G. Similar rules apply to RNA mutations\cite{nomenclature}.
 	\end{itemize}
-	In Table 1 we see what the dataset looks like (excluding some columns). Normally any given sample can have up to 200 mutations. 
+	In Table 1, we see a fragment of the dataset (excluding some columns). Usually, any given sample can have up to 200 mutations. 
 	\begin{table}
 		\caption{Fragment of the dataset}
 		\centering
@@ -105,15 +105,15 @@
 			\hline
 		\end{tabular}
 	\end{table}
-	The dataset also contains 1397 lineages and 25 clades. However, we quickly realized that only 15 lineages had more than 50000 samples (a healthy amount to apply the methods explained later). The pie chart in Figure 1 shows the largest lineages w.r.t. the number of samples. 
+	The dataset also contains 1397 lineages and 25 clades. However, we quickly realized that only 15 lineages had more than 50K samples (a healthy amount to apply the methods explained later). The pie chart in Figure 1 shows the largest lineages w.r.t. the number of samples. 
 	\begin{figure}
 		\caption{Pie chart of lineages w.r.t. number of samples} \label{piechart}
 		\begin{tikzpicture}
 			\pie{15/AY.4, 13/B.1.1.7, 8/BA.1, 6/BA.1.1, 5/AY.103, 4/AY.44, 2/AY.3,47/Under 100K}
 		\end{tikzpicture}
 	\end{figure}
-	This already shows that our analysis will mainly focus on those lineages. To get a panoramic view of the data, we can also look at the entire phylogenetic tree in Figure 2. The colors are assigned according to the clade, but it also contains all possible lineages. It is worth noting that some level of data cleaning and processing were necessary. Many samples were irrelevant (e.g., non-human subject) or incomplete (e.g., no lineage). We exploited the missing data column, which indicates how many amino acids were not sequenced in the samples. Through this, we filtered half a million samples with a high level of incompleteness, leaving 3.5 million samples. \\
-	The final step was converting the mutation data (string format, comma-separated mutations) to many binary columns, each being a mutation. So we transformed the initial dataset into a binary format by filtering mutations that appeared at least 0.01\% of the time within each lineage. In Table 2 we see the transformed dataset.
+	This already shows that our analysis will mainly focus on those lineages. To get a panoramic view of the data, we can also look at the entire phylogenetic tree in Figure 2. The colors are assigned according to the clade, but it also contains all possible lineages. It is worth noting that some level of data cleaning and processing was necessary. Many samples were irrelevant (e.g., non-human subject) or incomplete (e.g., no lineage). We exploited the missing data column, which indicates how many amino acids were not sequenced in the samples. Through this, we filtered half a million samples with a high level of incompleteness, leaving 3.5 million samples. \\
+	The final step was converting the mutation data (string format, comma-separated mutations) to many binary columns, each being a mutation. So we transformed the initial dataset into a binary format by filtering mutations that appeared at least 0.01\% of the time within each lineage. In Table 2, we see the transformed dataset.
 	\begin{figure}[h]
 		\caption{Phylogenetic tree of SARS-CoV-2}
 		\label{tree}
@@ -172,7 +172,7 @@
 		\begin{align*}
 			lift(X \rightarrow Y) = \frac{P(X\cup Y)}{P(X)\cdot P(Y)} = \frac{conf(X\rightarrow Y)}{rsup(Y)}
 		\end{align*}
-		Where $rsup(Y) = \frac{sup(X\cup Y)}{|\mathbf{D}|}$. If it is equal to 1 then the rule is to be expected since it could be deduced just by the supports of single mutations. We are interested in rules with lift much above or below 1, it would mean the rule is unexpected from the support. It can also be seen as a linear correlation index. 
+		Where $rsup(Y) = \frac{sup(X\cup Y)}{|\mathbf{D}|}$. If it is equal to 1, then the rule is expected since the support of single mutations is enough to deduce it. We are interested in rules with lift much above or below 1, which would mean the rule is unexpected from the support. It can also be seen as a linear correlation index. 
 		\item \textbf{Order: } The number of elements in the rule. For example, a rule with order 3 might be $\{A,B\} \rightarrow \{C\}$, it includes both antecedent and consequent. The number of rules of order $n + 1$ will always be much larger than those of order $n$.
 	\end{itemize}
 	\begin{table}
@@ -207,16 +207,16 @@
 	\\
 	ARM can help us identify non-obvious patterns within the lineages. However, given the number of all possible rules (larger even than the power set of mutations), we need to resort to an efficient algorithm for rule mining.
 	\subsection{Apriori algorithm}
-	We only briefly explain the intuition behind Apriori, for a full introduction see the original paper\cite{apriori}. We want to extract rules whose antecedent $X$ has a minimum support of $minsup$. We can exploit this requirement to reduce the rule search space drastically. The Apriori property states:
+	We only briefly explain the intuition behind Apriori. For a complete introduction, see the original paper\cite{apriori}. We want to extract rules whose antecedent $X$ has a minimum support of $minsup$. We can exploit this requirement to reduce the rule search space drastically. The Apriori property states:
 	\begin{quote}
 		\textit{All non-empty subsets of a frequent mutation set $X$ must also be frequent.} 
 	\end{quote}
-	$X$ is frequent if $sup(X) > minsup$. The following observation is also fundamental, if a mutation $A$ is added to a non-frequent mutation set $X$, the resulting set cannot occur more frequently than $X$. Therefore $X\cup \{A\}$ is non-frequent as well, since $P(X\cup\{A\}) < \frac{minsup}{|\mathbf{D}|}$. These properties are used to prune branches off the rule tree that we know, a priori, are non-frequent. 
+	$X$ is frequent if $sup(X) > minsup$. The following observation is also fundamental; if a mutation $A$ is added to a non-frequent mutation set $X$, the resulting set cannot occur more frequently than $X$. Therefore $X\cup \{A\}$ is non-frequent as well, since $P(X\cup\{A\}) < \frac{minsup}{|\mathbf{D}|}$. These properties are used to prune branches off the rule tree that we know, a priori, are non-frequent. 
 	\\
 	Although the standard Apriori R implementation is relatively fast, other algorithms offer comparable or superior performance depending on certain assumptions, such as FP-Growth\cite{fpgrowth} and LCM\cite{lcm}. 
 	\subsection{Hierarchical clustering and PCA}
 	The large number of features led us to perform dimensionality reduction for visualization; this was performed via PCA. Unfortunately, in most lineages at least 5 PCs were needed to explain 50\% or even less of the variability, and up to 15 or 20 to explain 80\%. \\
-	We resorted to hierarchical clustering despite the large number of data (e.g., computing the distance matrix over 100K+ samples is infeasible with 8 GBs of RAM). This decision was taken because of the positive results obtained with Ward's linkage, subsequently confirmed by our qualitative assessment of the pairs plot on the PCs. Finally, we tackled the previous issue by using random sampling.
+	We resorted to hierarchical clustering despite the large number of data (e.g., computing the distance matrix over 100K+ samples is infeasible with 8 GBs of RAM). This decision was taken because of the positive results obtained with Ward linkage, subsequently confirmed by our qualitative assessment of the pairs plot on the PCs. Finally, we tackled the previous issue by using random sampling.
 	\section{Data analysis and Pattern Recognition}
 	This section is divided into two parts
 	\begin{itemize}
@@ -225,7 +225,7 @@
 	\end{itemize}
 	\subsection{Identification of patterns within single lineages and association rules}
 	
-	We aimed to apply association rules directly to large segments of the dataset. However, this proved unfruitful since the generated rules were too many to filter ,even by lift. So we decided to study subsets of individual lineages instead. It is important to note that we performed a repeated sampling of 10K transactions and the following results are consistent throughout all samplings, except for negligible differences. \\We wanted to visualize the data, so we performed PCA and looked at the pairs plot. Figure 6 shows the scree plot after applying PCA on 10K randomly selected samples from AY.103.
+	We aimed to apply association rules directly to large segments of the dataset. However, this proved unfruitful since the generated rules were too many to filter, even by lift. So we decided to study subsets of individual lineages instead. It is important to note that we performed a repeated sampling of 10K transactions and the following results are consistent throughout all samplings, except for negligible differences. \\We wanted to visualize the data, so we performed PCA and looked at the pairs plot. Figure 6 shows the scree plot after applying PCA on 10K randomly selected samples from AY.103.
 	\begin{figure}[h]
 		\caption{Scree plot for 10K samples from AY.103}
 		\label{screeplot1}
@@ -246,9 +246,9 @@
 		\centering
 		\includegraphics[width=70mm, height=40mm]{pairsjitter.png}
 	\end{figure}\\
-	We proceed with hierarchical clustering on the original features using Ward's linkage\footnote{Ward's linkage gave much more balanced clusters w.r.t. other types of linkage}. Figure 9 shows the resulting dendrogram.
+	We proceed with hierarchical clustering on the original features using Ward linkage\footnote{Ward linkage gave much more balanced clusters w.r.t. other types of linkage}. Figure 9 shows the resulting dendrogram.
 	\begin{figure}[h]
-		\caption{Dendrogram (clustering with Ward's linkage)}
+		\caption{Dendrogram (clustering with Ward linkage)}
 		\label{dendrogram}
 		\centering
 		\includegraphics[width=70mm, height=40mm]{dendrogram.png}
@@ -264,7 +264,7 @@
 	
 	So we have exploited the information obtained via clustering and redirected our attention to potentially meaningful rules. The biological interpretation is that the mutations may be synergistic or beneficial to the virus or, more importantly, predominant in lineages generated or related to AY.103.
 	
-	The same procedure can be applied to any given spike and, more generally, to any lineage large enough to allow such a level of random sampling. We have confirmed so, clustering with Ward's linkage yields similar results in the main lineages (AY.4, B.1.1.7, BA.1, BA.1.1, AY.44, and AY.3) then confirmed by the pairs plot followed by an interpretation via association rules. 
+	The same procedure can be applied to any given spike and, more generally, to any lineage large enough to allow such a level of random sampling. We have confirmed so, clustering with Ward linkage yields similar results in the main lineages (AY.4, B.1.1.7, BA.1, BA.1.1, AY.44, and AY.3) then confirmed by the pairs plot followed by an interpretation via association rules. 
 	\begin{figure}[h]
 		\caption{Comparison of frequency barplots. Top to bottom: original barplot, barplot for cluster 1, barplot for cluster 2. Same order of mutations}
 		\label{comparison}
@@ -291,7 +291,7 @@
 		\end{tabularx}\\[4pt]
 	\end{table*}
 	\subsection{Clade discovery}
-	Another critical problem is that of lineage assignment and discovery. The current method for SARS-CoV-2 is PANGOLIN\footnote{Phylogenetic Assignment of Named Global Outbreak Lineages.}\cite{pango}. The assignment problem is solved by applying machine learning models, in particular \textquotedblleft pangoLEARN\textquotedblright\cite{pangolearn}. However, the discovery of lineages still needs to be manually curated, and although it leads to more accurate results, it does not fully exploit the large amount of data available. Moreover, no other historical event has provided this amount of data on a specific virus. Can we exploit this as we did for association rules? Unfortunately, this approach is not fine-grained enough to yield accurate results; this is confirmed by our less than satisfactory results for lineage discovery. Can we apply it to clades rather than lineages? We proceed as we did in the previous section.
+	Another critical problem is lineage assignment and discovery. The current method for SARS-CoV-2 is PANGOLIN\footnote{Phylogenetic Assignment of Named Global Outbreak Lineages.}\cite{pango}. The assignment problem is solved by applying machine learning models, in particular \textquotedblleft pangoLEARN\textquotedblright\cite{pangolearn}. However, the discovery of lineages still needs to be manually curated, and although it leads to more accurate results, it does not fully exploit the large amount of data available. Moreover, no other historical event has provided this amount of data on a specific virus. Can we exploit this as we did for association rules? Unfortunately, this approach is not fine-grained enough to yield accurate results; this is confirmed by our less than satisfactory results for lineage discovery. Can we apply it to clades rather than lineages? We proceed as we did in the previous section.
 	\\Figure 12 shows the current clade tree (reduced). We consider five lineages (belonging to three clades) and randomly extract 1600 samples from each (total of 8000 samples). Table 5 shows the lineages and their corresponding clades. We perform PCA and see that the first four principal components explain over 92\% of the variability; this better result w.r.t. to considering a single lineage is due to the intrinsic differences between the lineages. Figure 13 shows the pairs plot colored by lineage and clade.
 	\begin{figure}[h]
 		\caption{Clade tree (reduced) as of July 2022}
@@ -323,7 +323,7 @@
 		\includegraphics[width=70mm, height=40mm]{pairsx.png}
 		\includegraphics[width=70mm, height=40mm]{pairsx2.png}
 	\end{figure}
-	The idea is to perform clustering and obtain clusters that follow the clades. Clades are more coarse-grained by nature (there are 25 clades as opposed to over 1000 lineages). Clustering with Ward's linkage produces the dendrogram in Figure 14.
+	The idea is to perform clustering and obtain clusters that follow the clades. Clades are more coarse-grained by nature (there are 25 clades as opposed to over 1000 lineages). Clustering with Ward linkage produces the dendrogram in Figure 14.
 	\begin{figure}[h]
 		\caption{Dendrogram (clustering on mixed lineage dataset)}
 		\label{ward2}
@@ -340,7 +340,7 @@
 	We observe an almost perfect correspondence with the clade grouping. This result suggests adopting a data-driven approach to aid clade discovery rather than manually curated. It is reasonable to assume that with more sophisticated techniques, we could also apply this pipeline to lineages. 
 	It is worth noting that the current clade assignment method is not PANGOLIN but one developed by Nextstrain\cite{cladeassignment}, which closely follows the WHO variant designations (still manually curated). 
 	\section{Conclusion and future work}
-	We have shown that standard techniques such as clustering and association rules can successfully exploit the large amount of data available. For example, smaller datasets, the case with any other virus, would have yielded poor results because of the lack of large-scale random sampling. We found non-trivial mutation patterns because of the reduction of the rule space via the information provided by clustering. However, these results also have a biological interpretation; mutations tend to appear in pairs, possibly because of synergy between them (i.e., beneficial effect on the virus). Our analysis also suggests a data-driven lineage discovery method. 	
+	We have shown that standard techniques such as clustering and association rules can successfully exploit the large amount of data available. For example, smaller datasets, the case with any other virus, would have yielded poor results because of the lack of large-scale random sampling. We found non-trivial mutation patterns because of the reduction of the rule search space via the information provided by clustering. However, these results also have a biological interpretation; mutations tend to appear in pairs, possibly because of synergy between them (i.e., beneficial effect on the virus). Our analysis also suggests a data-driven lineage discovery method. 	
 	\\
 	Future research focuses on predicting novel sublineages by studying the mutation pairs (or groups) found via association rules. Another unexplored aspect of the data is their functional nature; each sample has the date of sampling, and the analysis of the growth rates of single mutations within lineages may aid in the study of the evolution of new sublineages, such would be the case of the latest Omicron variant, lineage BA.5.
 	\newpage
