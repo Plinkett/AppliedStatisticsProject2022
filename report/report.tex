@@ -70,7 +70,7 @@
 	
 	\section{Introduction}
 	
-	The wide availability of SARS-CoV-2 tests has provided us with large amounts of data on the virus' amino acid and RNA mutations. We study a dataset from Nextstrain\cite{nextstrainbook}, a project that collects data on viral outbreaks. At first, we aimed to find synergistic mutation pairs and perform clustering to find well-defined groups within the lineages; as we explored the data, the connections between these two objectives became clear and merged into one. This report is organized into five parts.
+	The wide availability of SARS-CoV-2 tests has provided us with large amounts of data on the virus' amino acid and RNA mutations. We study a dataset from Nextstrain\cite{nextstrainbook}, a project that collects data on viral outbreaks. At first, we aimed to find synergistic mutation pairs and perform clustering to find well-defined groups within the lineages; as we explored the data, the connections between these two objectives became clear and merged into one. This report is organized into four parts:
 	\begin{itemize}
 		\item Overview and exploration of the dataset 
 		\item Explanation of the methods used to analyze the data
@@ -218,7 +218,7 @@
 	The large number of features led us to perform dimensionality reduction for visualization; this was performed via PCA. Unfortunately, in most lineages at least 5 PCs were needed to explain 50\% or even less of the variability, and up to 15 or 20 to explain 80\%. \\
 	We resorted to hierarchical clustering despite the large number of data (e.g., computing the distance matrix over 100K+ samples is infeasible with 8 GBs of RAM). This decision was taken because of the positive results obtained with Ward linkage, subsequently confirmed by our qualitative assessment of the pairs plot on the PCs. Finally, we tackled the previous issue by using random sampling.
 	\section{Data analysis and Pattern Recognition}
-	This section is divided into two parts
+	This section is divided into two parts:
 	\begin{itemize}
 		\item Identification of patterns within single lineages and association rules
 		\item Clade discovery
