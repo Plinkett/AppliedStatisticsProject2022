@@ -162,12 +162,12 @@
 		\item \textbf{Support:} The support of a subset of mutations \textit{X}, denoted by 
 		\begin{align*}
 			sup(X)
-		\end{align*} is the number of transactions (or samples) in a transaction dataset \textbf{D} that contain \textit{X}. In Table 3 the subset \{A\} has support 3 since it appears in three transactions. Subset \{B, C\} has support 1. It is an estimate of the joint probability of the items in \textit{X}. The support of rule $\{B\} \rightarrow \{C\}$ is 1.
+		\end{align*} is the number of transactions (or samples) in a transaction dataset \textbf{D} that contain \textit{X}. In Table 3 the subset \{A\} has support 3 since it appears in three transactions. Subset \{B, C\} has support 1. If we divide it by $|\mathbf{D}|$ (number of transactions in $\mathbf{D}$), we get an estimate of the joint probability of the items in \textit{X}.
 		\item \textbf{Confidence:} The confidence of a rule is an estimate of the conditional probability that a transaction contains $Y$ given that it contains $X$.
 		\begin{align*}
 			conf(X \rightarrow Y) = P(Y|X) = \frac{P(XY)}{P(X)}
 		\end{align*}
-		Where $P(XY)$ is the number of transactions containing mutation sets $X$ and $Y$ divided by $|\mathbf{D}|$, the number of transactions. It can also be seen as $\frac{sup(XY)}{sup(X)}$. In Table 3 the confidence of $\{B\} \rightarrow \{C\}$ is 0.5. Confidence can be a misleading metric in some cases. It is mostly used to filter very unlikely rules but not to assess their quality.
+		Where $P(XY)$ is the number of transactions containing mutation sets $X$ and $Y$ divided by $|\mathbf{D}|$. It can also be seen as $\frac{sup(XY)}{sup(X)}$. In Table 3 the confidence of $\{B\} \rightarrow \{C\}$ is 0.5. Confidence can be a misleading metric in some cases. It is mostly used to filter very unlikely rules but not to assess their quality.
 		\item \textbf{Lift:} Ratio of the observed joint probability of $X$ and $Y$ to the expected joint probability if they were statistically independent.	
 		\begin{align*}
 			lift(X \rightarrow Y) = \frac{P(XY)}{P(X)\cdot P(Y)} = \frac{conf(X\rightarrow Y)}{rsup(Y)}
