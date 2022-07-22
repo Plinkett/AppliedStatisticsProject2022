@@ -165,12 +165,12 @@
 		\end{align*} is the number of transactions (or samples) in a transaction dataset \textbf{D} that contain \textit{X}. In Table 3 the subset \{A\} has support 3 since it appears in three transactions. Subset \{B, C\} has support 1. If we divide it by $|\mathbf{D}|$ (number of transactions in $\mathbf{D}$), we get an estimate of the joint probability of the items in \textit{X}.
 		\item \textbf{Confidence:} The confidence of a rule is an estimate of the conditional probability that a transaction contains $Y$ given that it contains $X$.
 		\begin{align*}
-			conf(X \rightarrow Y) = P(Y|X) = \frac{P(XY)}{P(X)}
+			conf(X \rightarrow Y) = P(Y|X) = \frac{P(X,Y)}{P(X)}
 		\end{align*}
-		Where $P(XY)$ is the number of transactions containing mutation sets $X$ and $Y$ divided by $|\mathbf{D}|$. It can also be seen as $\frac{sup(XY)}{sup(X)}$. In Table 3 the confidence of $\{B\} \rightarrow \{C\}$ is 0.5. Confidence can be a misleading metric in some cases. It is mostly used to filter very unlikely rules but not to assess their quality.
+		Where $P(X,Y)$ is the number of transactions containing mutation sets $X$ and $Y$ divided by $|\mathbf{D}|$. It can also be seen as $\frac{sup(X,Y)}{sup(X)}$. In Table 3 the confidence of $\{B\} \rightarrow \{C\}$ is 0.5. Confidence can be a misleading metric in some cases. It is mostly used to filter very unlikely rules but not to assess their quality.
 		\item \textbf{Lift:} Ratio of the observed joint probability of $X$ and $Y$ to the expected joint probability if they were statistically independent.	
 		\begin{align*}
-			lift(X \rightarrow Y) = \frac{P(XY)}{P(X)\cdot P(Y)} = \frac{conf(X\rightarrow Y)}{rsup(Y)}
+			lift(X \rightarrow Y) = \frac{P(X,Y)}{P(X)\cdot P(Y)} = \frac{conf(X\rightarrow Y)}{rsup(Y)}
 		\end{align*}
 		Where $rsup(Y) = \frac{sup(Y)}{|\mathbf{D}|}$. If it is equal to 1, then the rule is expected since the support of single mutations is enough to deduce it. We are interested in rules with lift much above or below 1, which would mean the rule is unexpected from the support. It can also be seen as a linear correlation index. 
 		\item \textbf{Order: } The number of elements in the rule. For example, a rule with order 3 might be $\{A,B\} \rightarrow \{C\}$, it includes both antecedent and consequent. The number of rules of order $n + 1$ will always be much larger than those of order $n$.
