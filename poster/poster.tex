@@ -147,7 +147,7 @@
 			\item \textbf{Support:} The support of a subset of mutations \textit{X}, denoted by $sup(X)$, is the number of transactions (or samples) in a transaction dataset \textbf{D} that contain \textit{X}. 
 			\item \textbf{Confidence:} The confidence of a rule is an estimate of the conditional probability that a transaction contains $Y$ given that it contains $X$.
 			\begin{align*}
-				conf(X \rightarrow Y) = P(X|Y) = \frac{P(X \land Y)}{P(X)} = \frac{sup(X \cup Y)}{sup(X)}
+				conf(X \rightarrow Y) = P(X|Y) = \frac{P(X \land Y)}{P(Y)} = \frac{sup(X \cup Y)}{sup(Y)}
 			\end{align*}
 			Confidence can be a misleading metric in some cases, it is mostly used for filtering very unlikely rules, but not for assessing their quality.
 			\item \textbf{Lift:} Ratio of the observed joint probability of $X$ and $Y$ to the expected joint probability if they were statistically independent.	

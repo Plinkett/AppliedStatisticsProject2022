@@ -165,9 +165,9 @@
 		\end{align*} is the number of transactions (or samples) in a transaction dataset \textbf{D} that contain \textit{X}. In Table 3 the subset \{A\} has support 2 since it appears in two transactions. Subset \{B, C\} has support 1. It is an estimate of the joint probability of the items in \textit{X}. The support of rule $\{B\} \rightarrow \{C\}$ is 1.
 		\item \textbf{Confidence:} The confidence of a rule is an estimate of the conditional probability that a transaction contains $Y$ given that it contains $X$.
 		\begin{align*}
-			conf(X \rightarrow Y) = P(X|Y) = \frac{P(X \land Y)}{P(X)}
+			conf(X \rightarrow Y) = P(X|Y) = \frac{P(X \land Y)}{P(Y)}
 		\end{align*}
-		It can also be seen as $\frac{sup(X \cup Y)}{sup(X)}$. In Table 3 the confidence of $\{B\} \rightarrow \{C\}$ is 0.5. Confidence can be a misleading metric in some cases, it is mostly used for filtering very unlikely rules, but not for assessing their quality.
+		It can also be seen as $\frac{sup(X \cup Y)}{sup(Y)}$. In Table 3 the confidence of $\{B\} \rightarrow \{C\}$ is 0.5. Confidence can be a misleading metric in some cases, it is mostly used for filtering very unlikely rules, but not for assessing their quality.
 		\item \textbf{Lift:} Ratio of the observed joint probability of $X$ and $Y$ to the expected joint probability if they were statistically independent.	
 		\begin{align*}
 			lift(X \rightarrow Y) = \frac{P(X\cup Y)}{P(X)\cdot P(Y)} = \frac{conf(X\rightarrow Y)}{rsup(Y)}
