@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Debian) (preloaded format=pdflatex 2022.6.25)  22 JUL 2022 16:25
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Debian) (preloaded format=pdflatex 2022.6.25)  22 JUL 2022 21:22
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1301,33 +1301,39 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[3]
-<images/scree.png, id=93, 1417.54594pt x 691.83469pt>
+[3] [4 <./images/rules1.png (PNG copy)> <./images/rules2.png (PNG copy)>]
+<images/scree.png, id=104, 1417.54594pt x 691.83469pt>
 File: images/scree.png Graphic file (type png)
 <use images/scree.png>
-Package pdftex.def Info: images/scree.png  used on input line 233.
+Package pdftex.def Info: images/scree.png  used on input line 237.
 (pdftex.def)             Requested size: 199.16887pt x 113.80998pt.
-<images/pca1.png, id=94, 1407.00656pt x 699.36281pt>
+<images/pca1.png, id=105, 1407.00656pt x 699.36281pt>
 File: images/pca1.png Graphic file (type png)
 <use images/pca1.png>
-Package pdftex.def Info: images/pca1.png  used on input line 240.
+Package pdftex.def Info: images/pca1.png  used on input line 244.
 (pdftex.def)             Requested size: 199.16943pt x 113.81052pt.
-<images/pairsjitter.png, id=95, 1407.00656pt x 700.11563pt>
+<images/pairsjitter.png, id=106, 1407.00656pt x 700.11563pt>
 File: images/pairsjitter.png Graphic file (type png)
 <use images/pairsjitter.png>
-Package pdftex.def Info: images/pairsjitter.png  used on input line 247.
+Package pdftex.def Info: images/pairsjitter.png  used on input line 251.
 (pdftex.def)             Requested size: 199.16943pt x 113.80482pt.
-<images/dendrogram.png, id=97, 1364.84906pt x 513.41812pt>
+<images/dendrogram.png, id=108, 1364.84906pt x 513.41812pt>
 File: images/dendrogram.png Graphic file (type png)
 <use images/dendrogram.png>
-Package pdftex.def Info: images/dendrogram.png  used on input line 254.
+Package pdftex.def Info: images/dendrogram.png  used on input line 258.
 (pdftex.def)             Requested size: 199.158pt x 113.80624pt.
-<images/pairs2.png, id=98, 1404.74812pt x 700.86844pt>
+<images/pairs2.png, id=109, 1404.74812pt x 700.86844pt>
 File: images/pairs2.png Graphic file (type png)
 <use images/pairs2.png>
-Package pdftex.def Info: images/pairs2.png  used on input line 261.
+Package pdftex.def Info: images/pairs2.png  used on input line 265.
 (pdftex.def)             Requested size: 199.14983pt x 113.80956pt.
- [4 <./images/rules1.png (PNG copy)> <./images/rules2.png (PNG copy)>]
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
@@ -1336,71 +1342,65 @@ rsjitter.png (PNG copy)> <./images/dendrogram.png (PNG copy)>]
 <images/c0.png, id=120, 1242.89343pt x 554.82281pt>
 File: images/c0.png Graphic file (type png)
 <use images/c0.png>
-Package pdftex.def Info: images/c0.png  used on input line 272.
+Package pdftex.def Info: images/c0.png  used on input line 276.
 (pdftex.def)             Requested size: 199.17046pt x 113.80713pt.
 <images/c1.png, id=121, 1245.15187pt x 553.31718pt>
 File: images/c1.png Graphic file (type png)
 <use images/c1.png>
-Package pdftex.def Info: images/c1.png  used on input line 273.
+Package pdftex.def Info: images/c1.png  used on input line 277.
 (pdftex.def)             Requested size: 199.15237pt x 113.81068pt.
 <images/c2.png, id=122, 1151.80313pt x 521.69907pt>
 File: images/c2.png Graphic file (type png)
 <use images/c2.png>
-Package pdftex.def Info: images/c2.png  used on input line 274.
+Package pdftex.def Info: images/c2.png  used on input line 278.
 (pdftex.def)             Requested size: 199.16078pt x 113.81093pt.
 
-Overfull \hbox (1.65364pt too wide) in paragraph at lines 291--291
+Overfull \hbox (1.65364pt too wide) in paragraph at lines 295--295
 []|\T1/pplx/m/n/10 (-20) Conf.| 
  []
 
 
-Overfull \hbox (4.88763pt too wide) in paragraph at lines 291--291
+Overfull \hbox (4.88763pt too wide) in paragraph at lines 295--295
 []|\T1/pplx/m/n/10 (-20) 10.335| 
  []
 
 
-Overfull \hbox (4.88763pt too wide) in paragraph at lines 291--291
+Overfull \hbox (4.88763pt too wide) in paragraph at lines 295--295
 []|\T1/pplx/m/n/10 (-20) 10.335| 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 291--292
+Underfull \hbox (badness 10000) in paragraph at lines 295--296
 
  []
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
 
 <images/clades.png, id=126, 910.15031pt x 538.26094pt>
 File: images/clades.png Graphic file (type png)
 <use images/clades.png>
-Package pdftex.def Info: images/clades.png  used on input line 300.
+Package pdftex.def Info: images/clades.png  used on input line 304.
 (pdftex.def)             Requested size: 199.16432pt x 113.81017pt.
 <images/pairsx.png, id=127, 1415.2875pt x 734.745pt>
 File: images/pairsx.png Graphic file (type png)
 <use images/pairsx.png>
-Package pdftex.def Info: images/pairsx.png  used on input line 323.
+Package pdftex.def Info: images/pairsx.png  used on input line 327.
 (pdftex.def)             Requested size: 199.15388pt x 113.80582pt.
 <images/pairsx2.png, id=128, 1420.55719pt x 733.99219pt>
 File: images/pairsx2.png Graphic file (type png)
 <use images/pairsx2.png>
-Package pdftex.def Info: images/pairsx2.png  used on input line 324.
+Package pdftex.def Info: images/pairsx2.png  used on input line 328.
 (pdftex.def)             Requested size: 199.15843pt x 113.80121pt.
 <images/ward.png, id=129, 1315.16344pt x 512.66531pt>
 File: images/ward.png Graphic file (type png)
 <use images/ward.png>
-Package pdftex.def Info: images/ward.png  used on input line 331.
+Package pdftex.def Info: images/ward.png  used on input line 335.
 (pdftex.def)             Requested size: 199.15237pt x 113.81148pt.
 <images/pairs3.png, id=130, 1407.00656pt x 698.61pt>
 File: images/pairs3.png Graphic file (type png)
 <use images/pairs3.png>
-Package pdftex.def Info: images/pairs3.png  used on input line 338.
+Package pdftex.def Info: images/pairs3.png  used on input line 342.
 (pdftex.def)             Requested size: 199.16943pt x 113.80527pt.
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [6 <./images/pairs2.png (PNG copy)> <./images/c0.png (PNG copy)> <./images/c1.
-png (PNG copy)> <./images/c2.png (PNG copy)>]
+[6 <./images/pairs2.png (PNG copy)> <./images/c0.png (PNG copy)> <./images/c1.p
+ng (PNG copy)> <./images/c2.png (PNG copy)>]
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
@@ -1411,18 +1411,18 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 [7 <./images/clades.png (PNG copy)>]
-Underfull \hbox (badness 1515) in paragraph at lines 353--354
+Underfull \hbox (badness 1515) in paragraph at lines 357--358
 \T1/pplx/m/n/10 (+20) Trevor Bed-ford, and Richard A. Ne-
  []
 
 [8 <./images/pairsx.png (PNG copy)> <./images/pairsx2.png (PNG copy)> <./images
 /ward.png (PNG copy)> <./images/pairs3.png (PNG copy)>]
-Underfull \hbox (badness 1454) in paragraph at lines 363--364
+Underfull \hbox (badness 1454) in paragraph at lines 367--368
 []\T1/pplx/m/n/10 (+20) Agrawal, Rakesh, and Ra-makr-ish-nan
  []
 
 
-Underfull \hbox (badness 1062) in paragraph at lines 373--374
+Underfull \hbox (badness 1062) in paragraph at lines 377--378
 []\T1/pplx/m/n/10 (+20) Aksamentov, Ivan, Cor-nelius Roe-mer,
  []
 
@@ -1433,11 +1433,11 @@ Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: 5E406F2C19A1447AAEE0420AD274E179;1967.
  ) 
 Here is how much of TeX's memory you used:
- 29577 strings out of 480152
- 537126 string characters out of 5894086
+ 29578 strings out of 480152
+ 537132 string characters out of 5894086
  858360 words of memory out of 5000000
  46555 multiletter control sequences out of 15000+600000
- 544937 words of font info for 387 fonts, out of 8000000 for 9000
+ 545245 words of font info for 388 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
  115i,11n,118p,1281b,943s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
@@ -1447,7 +1447,7 @@ f-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist
 urw/palatino/uplb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/palatino
 /uplr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/palatino/uplri8a.pfb
 >
-Output written on report.pdf (9 pages, 3037121 bytes).
+Output written on report.pdf (9 pages, 3037168 bytes).
 PDF statistics:
  206 PDF objects out of 1000 (max. 8388607)
  164 compressed objects within 2 object streams

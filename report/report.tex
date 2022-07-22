@@ -165,14 +165,14 @@
 		\end{align*} is the number of transactions (or samples) in a transaction dataset \textbf{D} that contain \textit{X}. In Table 3 the subset \{A\} has support 3 since it appears in three transactions. Subset \{B, C\} has support 1. It is an estimate of the joint probability of the items in \textit{X}. The support of rule $\{B\} \rightarrow \{C\}$ is 1.
 		\item \textbf{Confidence:} The confidence of a rule is an estimate of the conditional probability that a transaction contains $Y$ given that it contains $X$.
 		\begin{align*}
-			conf(X \rightarrow Y) = P(X|Y) = \frac{P(X \land Y)}{P(Y)}
+			conf(X \rightarrow Y) = P(Y|X) = \frac{P(XY)}{P(X)}
 		\end{align*}
-		It can also be seen as $\frac{sup(X \cup Y)}{sup(Y)}$. In Table 3 the confidence of $\{B\} \rightarrow \{C\}$ is 0.5. Confidence can be a misleading metric in some cases, it is mostly used for filtering very unlikely rules, but not for assessing their quality.
+		Where $P(XY)$ is the number of transactions containing mutation sets $X$ and $Y$ divided by $|\mathbf{D}|$, the number of transactions. It can also be seen as $\frac{sup(XY)}{sup(X)}$. In Table 3 the confidence of $\{B\} \rightarrow \{C\}$ is 0.5. Confidence can be a misleading metric in some cases. It is mostly used to filter very unlikely rules but not to assess their quality.
 		\item \textbf{Lift:} Ratio of the observed joint probability of $X$ and $Y$ to the expected joint probability if they were statistically independent.	
 		\begin{align*}
-			lift(X \rightarrow Y) = \frac{P(X\cup Y)}{P(X)\cdot P(Y)} = \frac{conf(X\rightarrow Y)}{rsup(Y)}
+			lift(X \rightarrow Y) = \frac{P(XY)}{P(X)\cdot P(Y)} = \frac{conf(X\rightarrow Y)}{rsup(Y)}
 		\end{align*}
-		Where $rsup(Y) = \frac{sup(X\cup Y)}{|\mathbf{D}|}$. If it is equal to 1, then the rule is expected since the support of single mutations is enough to deduce it. We are interested in rules with lift much above or below 1, which would mean the rule is unexpected from the support. It can also be seen as a linear correlation index. 
+		Where $rsup(Y) = \frac{sup(Y)}{|\mathbf{D}|}$. If it is equal to 1, then the rule is expected since the support of single mutations is enough to deduce it. We are interested in rules with lift much above or below 1, which would mean the rule is unexpected from the support. It can also be seen as a linear correlation index. 
 		\item \textbf{Order: } The number of elements in the rule. For example, a rule with order 3 might be $\{A,B\} \rightarrow \{C\}$, it includes both antecedent and consequent. The number of rules of order $n + 1$ will always be much larger than those of order $n$.
 	\end{itemize}
 	\begin{table}
@@ -211,7 +211,11 @@
 	\begin{quote}
 		\textit{All non-empty subsets of a frequent mutation set $X$ must also be frequent.} 
 	\end{quote}
-	$X$ is frequent if $sup(X) > minsup$. The following observation is also fundamental; if a mutation $A$ is added to a non-frequent mutation set $X$, the resulting set cannot occur more frequently than $X$. Therefore $X\cup \{A\}$ is non-frequent as well, since $P(X\cup\{A\}) < \frac{minsup}{|\mathbf{D}|}$. These properties are used to prune branches off the rule tree that we know, a priori, are non-frequent. 
+	$X$ is frequent if $sup(X) > minsup$. The following observation is also fundamental; if a mutation $A$ is added to a non-frequent mutation set $X$, the resulting set cannot occur more frequently than $X$. Therefore $X\cup \{A\}$ is non-frequent as well, since
+	\begin{align*}
+		P({X\cup \{A\}}) = \frac{sup(X \cup \{A\})}{|\mathbf{D}|}< \frac{minsup}{|\mathbf{D}|}
+	\end{align*} 
+These properties are used to prune branches off the rule tree that we know, a priori, are non-frequent. 
 	\\
 	Although the standard Apriori R implementation is relatively fast, other algorithms offer comparable or superior performance depending on certain assumptions, such as FP-Growth\cite{fpgrowth} and LCM\cite{lcm}. 
 	\subsection{Hierarchical clustering and PCA}
